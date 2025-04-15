@@ -25,6 +25,9 @@
             --white: #ffffff;
             --light-bg: #f9f9f9;
             --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            --wave-color: rgba(48, 156, 228, 0.15);
+            --popup-bg: rgba(22, 68, 100, 0.95);
+            --popup-accent: rgba(48, 156, 228, 0.8);
         }
 
         html {
@@ -353,107 +356,551 @@
             transform: translateY(-6px) rotate(-45deg);
         }
 
-        /* Fleet Presentation Styles */
+        /* Fleet Presentation Styles - Redesigned for futuristic look */
         .fleet-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
+            flex-wrap: wrap;
+            justify-content: space-between;
             margin-top: 50px;
         }
 
         .ship-card {
-            width: 80%;
-            max-width: 800px;
+            width: calc(50% - 20px);
             margin-bottom: 40px;
-            border-radius: 15px;
+            border-radius: 8px;
             overflow: hidden;
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
-            transition: var(--transition);
             position: relative;
-            opacity: 0;
-            transform: translateY(50px);
-            visibility: hidden; /* Hide ships initially */
+            background-color: var(--secondary);
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            height: 350px;
         }
 
-        .ship-card.visible {
-            opacity: 1;
-            transform: translateY(0);
-            visibility: visible;
+        .ship-card:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(48, 156, 228, 0.1) 0%, rgba(22, 68, 100, 0.3) 100%);
+            z-index: 1;
+        }
+
+        .ship-card:after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid transparent;
+            border-image: linear-gradient(to right, var(--primary), transparent);
+            border-image-slice: 1;
+            box-sizing: border-box;
+            z-index: 2;
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .ship-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(48, 156, 228, 0.2);
+        }
+
+        .ship-card:hover:after {
+            opacity: 1;
+        }
+
+        .ship-image-container {
+            position: relative;
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
         }
 
         .ship-image {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: auto;
-            border-bottom: 1px solid var(--light-bg);
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+            filter: brightness(0.85) contrast(1.1);
         }
 
-        .ship-content {
-            padding: 30px;
-            text-align: left;
+        .ship-card:hover .ship-image {
+            transform: scale(1.05);
+        }
+
+        .ship-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(22, 68, 100, 0) 0%, rgba(22, 68, 100, 0.8) 80%);
+            z-index: 3;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+            padding: 20px;
+            transition: background 0.3s ease;
+        }
+
+        .ship-card:hover .ship-overlay {
+            background: linear-gradient(to bottom, rgba(22, 68, 100, 0.4) 0%, rgba(22, 68, 100, 0.9) 80%);
         }
 
         .ship-title {
-            color: var(--primary-dark);
+            color: var(--white);
             font-size: 1.8rem;
             font-weight: 600;
+            margin-bottom: 5px;
+            position: relative;
+            z-index: 4;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .ship-info {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+            line-height: 1.4;
+            position: relative;
+            z-index: 4;
             margin-bottom: 15px;
         }
 
-        .ship-description {
-            color: var(--text-light);
-            font-size: 1.1rem;
-            line-height: 1.7;
-            margin-bottom: 25px;
+        .ship-click-info {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(22, 68, 100, 0.7);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 5;
         }
 
-        /* Mobile-specific styles for ship cards */
-        @media (max-width: 768px) {
-            .ship-content .btn {
-                padding: 10px 20px; /* 15% smaller button */
-                font-size: 0.77rem; /* 15% smaller font */
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
-                max-width: 100%;
+        .ship-card:hover .ship-click-info {
+            opacity: 1;
+        }
+
+        .click-info-content {
+            text-align: center;
+            color: var(--white);
+            padding: 20px;
+            border: 1px solid rgba(48, 156, 228, 0.5);
+            border-radius: 8px;
+            background-color: rgba(22, 68, 100, 0.8);
+            max-width: 80%;
+            transform: translateY(20px);
+            opacity: 0;
+            transition: transform 0.3s ease 0.1s, opacity 0.3s ease 0.1s;
+        }
+
+        .ship-card:hover .click-info-content {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .click-info-content h4 {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .click-info-content p {
+            font-size: 0.9rem;
+            margin-bottom: 15px;
+        }
+
+        .click-info-icon {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+                opacity: 1;
             }
-            
-            .ship-description {
-                font-size: 1rem;
-                line-height: 1.5;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+            50% {
+                transform: scale(1.1);
+                opacity: 0.8;
             }
-            
-            .ship-title {
-                font-size: 1.5rem;
-                white-space: nowrap;
-                overflow: hidden;
-                text-overflow: ellipsis;
+            100% {
+                transform: scale(1);
+                opacity: 1;
             }
         }
 
-        /* Responsive Grid for Ship Cards */
-        @media (min-width: 768px) {
-            .fleet-container {
-                flex-direction: row;
-                flex-wrap: wrap;
-                justify-content: space-around;
-            }
+        .ship-corner {
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            border-color: var(--primary);
+            border-style: solid;
+            border-width: 0;
+            z-index: 6;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
 
-            .ship-card {
-                width: 45%; /* Two ships per row on larger screens */
+        .ship-corner-tl {
+            top: 10px;
+            left: 10px;
+            border-top-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .ship-corner-tr {
+            top: 10px;
+            right: 10px;
+            border-top-width: 2px;
+            border-right-width: 2px;
+        }
+
+        .ship-corner-bl {
+            bottom: 10px;
+            left: 10px;
+            border-bottom-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .ship-corner-br {
+            bottom: 10px;
+            right: 10px;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+        }
+
+        .ship-card:hover .ship-corner {
+            opacity: 1;
+        }
+
+        /* Ship Modal Popup - Redesigned for better visibility */
+        .ship-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .ship-modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .ship-modal {
+            position: relative;
+            width: 90%;
+            max-width: 1200px;
+            height: 80vh;
+            max-height: 700px;
+            background-color: var(--popup-bg);
+            border-radius: 10px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transform: scale(0.9);
+            opacity: 0;
+            transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1), 
+                        opacity 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        .ship-modal-overlay.active .ship-modal {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .ship-modal-pattern {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23309ce4' fill-opacity='0.15'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            opacity: 0.2;
+            z-index: 0;
+        }
+
+        .ship-modal-grid {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: auto 1fr;
+            grid-template-areas: 
+                "header header"
+                "image specs";
+            height: 100%;
+            padding: 25px;
+            gap: 20px;
+        }
+
+        .ship-modal-header {
+            grid-area: header;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--popup-accent);
+            padding-bottom: 15px;
+            margin-bottom: 10px;
+        }
+
+        .ship-modal-title {
+            color: var(--white);
+            font-size: 2.2rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin: 0;
+            opacity: 0;
+            transform: translateY(-20px);
+            transition: opacity 0.5s ease 0.2s, transform 0.5s ease 0.2s;
+        }
+
+        .ship-modal-overlay.active .ship-modal-title {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .ship-modal-close {
+            background: none;
+            border: none;
+            color: var(--white);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            transition: background-color 0.3s ease;
+        }
+
+        .ship-modal-close:hover {
+            background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        .ship-modal-image-container {
+            grid-area: image;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            opacity: 0;
+            transform: translateX(-20px);
+            transition: opacity 0.5s ease 0.3s, transform 0.5s ease 0.3s;
+            height: 100%;
+        }
+
+        .ship-modal-overlay.active .ship-modal-image-container {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .ship-modal-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ship-modal-specs {
+            grid-area: specs;
+            color: var(--white);
+            padding: 15px;
+            background-color: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateX(20px);
+            transition: opacity 0.5s ease 0.4s, transform 0.5s ease 0.4s;
+            overflow-y: auto;
+        }
+
+        .ship-modal-overlay.active .ship-modal-specs {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .ship-modal-specs-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .ship-modal-specs-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .ship-modal-spec-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .ship-modal-spec-label {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 3px;
+        }
+
+        .ship-modal-spec-value {
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .ship-modal-description {
+            margin-bottom: 20px;
+            line-height: 1.5;
+            font-size: 0.95rem;
+        }
+
+        .ship-modal-download {
+            margin-top: auto;
+            align-self: flex-start;
+        }
+
+        /* Futuristic elements */
+        .ship-modal-scanner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background-color: var(--popup-accent);
+            opacity: 0.7;
+            z-index: 2;
+            transform: translateY(-5px);
+            animation: scanner-animation 3s ease-in-out infinite;
+        }
+
+        @keyframes scanner-animation {
+            0% {
+                transform: translateY(-5px);
+            }
+            50% {
+                transform: translateY(calc(100% + 5px));
+            }
+            100% {
+                transform: translateY(-5px);
             }
         }
 
-        @media (max-width: 767px) {
-            .ship-card {
-                width: 100%; /* One ship per row on smaller screens */
+        .ship-modal-corner {
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-color: var(--popup-accent);
+            border-style: solid;
+            border-width: 0;
+            z-index: 2;
+        }
+
+        .ship-modal-corner-tl {
+            top: 10px;
+            left: 10px;
+            border-top-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .ship-modal-corner-tr {
+            top: 10px;
+            right: 10px;
+            border-top-width: 2px;
+            border-right-width: 2px;
+        }
+
+        .ship-modal-corner-bl {
+            bottom: 10px;
+            left: 10px;
+            border-bottom-width: 2px;
+            border-left-width: 2px;
+        }
+
+        .ship-modal-corner-br {
+            bottom: 10px;
+            right: 10px;
+            border-bottom-width: 2px;
+            border-right-width: 2px;
+        }
+
+        /* Ocean wave effect - Redesigned to be less invasive */
+        .ocean {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3%; /* Reduced height */
+            background: var(--wave-color);
+            z-index: -1;
+            opacity: 0.7; /* Reduced opacity */
+        }
+
+        .wave {
+            background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDgwIDEwOCI+PHBhdGggZmlsbD0icmdiYSg0OCwgMTU2LCAyMjgsIDAuMykiIGQ9Ik0wLDEwOGgxMDgwVjcyQzgzOSw3MiA3MjksMCAwLDB6Ii8+PC9zdmc+) repeat-x;
+            position: absolute;
+            top: -108px;
+            width: 6400px;
+            height: 108px;
+            animation: wave 40s cubic-bezier(0.36, 0.45, 0.63, 0.53) infinite; /* Slower animation */
+            transform: translate3d(0, 0, 0);
+            opacity: 0.4; /* Reduced opacity */
+        }
+
+        .wave:nth-of-type(2) {
+            top: -90px;
+            animation: wave 50s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.125s infinite, swell 10s ease -1.25s infinite; /* Slower animation */
+            opacity: 0.3; /* Reduced opacity */
+        }
+
+        .wave:nth-of-type(3) {
+            top: -72px;
+            animation: wave 60s cubic-bezier(0.36, 0.45, 0.63, 0.53) -0.25s infinite, swell 15s ease -2.5s infinite; /* Slower animation */
+            opacity: 0.2; /* Reduced opacity */
+        }
+
+        @keyframes wave {
+            0% {
+                margin-left: 0;
+            }
+            100% {
+                margin-left: -1600px;
+            }
+        }
+
+        @keyframes swell {
+            0%, 100% {
+                transform: translate3d(0, -5px, 0); /* Reduced movement */
+            }
+            50% {
+                transform: translate3d(0, 3px, 0); /* Reduced movement */
             }
         }
 
@@ -618,7 +1065,7 @@
         /* Hero Section */
         .hero {
             position: relative;
-            height: 70vh; /* Changed from 400px to 70vh to match chi-siamo.html */
+            height: 70vh;
             width: 100%;
             overflow: hidden;
             display: flex;
@@ -645,14 +1092,14 @@
             max-width: 900px;
             padding: 0 20px;
             z-index: 2;
-            margin-top: 150px; /* Added margin-top to match chi-siamo.html */
+            margin-top: 150px;
         }
 
         .hero-title {
-            font-size: 4rem; /* Changed from 2.5rem to 4rem to match chi-siamo.html */
+            font-size: 4rem;
             font-weight: 700;
             margin-bottom: 20px;
-            line-height: 1.2; /* Changed from 1.4 to 1.2 to match chi-siamo.html */
+            line-height: 1.2;
             opacity: 0;
             transform: translateY(30px);
             animation: fadeInUp 1s forwards 0.5s;
@@ -678,7 +1125,7 @@
             transition: var(--transition);
             box-shadow: 0 5px 15px rgba(48, 156, 228, 0.3);
             z-index: 999;
-            font-size: 1.2rem; /* Added explicit font size */
+            font-size: 1.2rem;
         }
 
         .back-to-top.active {
@@ -800,6 +1247,31 @@
             .hero-title {
                 font-size: 2.4rem;
             }
+
+            .ship-card {
+                width: 100%;
+            }
+            
+            .ship-modal {
+                height: 90vh;
+            }
+            
+            .ship-modal-grid {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto auto 1fr;
+                grid-template-areas: 
+                    "header"
+                    "image"
+                    "specs";
+            }
+            
+            .ship-modal-image-container {
+                height: 250px;
+            }
+            
+            .ship-modal-specs-grid {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media screen and (max-width: 480px) {
@@ -829,6 +1301,78 @@
                 padding: 10px 12px;
             }
         }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .preloader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(48, 156, 228, 0.5);
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+            display: none;
+        }
+
+        .cursor.active {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(48, 156, 228, 0.2);
+        }
+
+        @media (min-width: 1025px) {
+            .cursor {
+                display: block;
+            }
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background-color: var(--primary);
+            width: 0%;
+            z-index: 1002;
+            transition: width 0.1s ease;
+        }
     </style>
 </head>
 <body>
@@ -846,6 +1390,54 @@
     <!-- Back to Top Button -->
     <div class="back-to-top">
         <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Ocean Effect -->
+    <div class="ocean">
+        <div class="wave"></div>
+        <div class="wave"></div>
+        <div class="wave"></div>
+    </div>
+
+    <!-- Ship Modal Overlay -->
+    <div class="ship-modal-overlay" id="shipModalOverlay">
+        <div class="ship-modal">
+            <div class="ship-modal-pattern"></div>
+            <div class="ship-modal-scanner"></div>
+            <div class="ship-modal-corner ship-modal-corner-tl"></div>
+            <div class="ship-modal-corner ship-modal-corner-tr"></div>
+            <div class="ship-modal-corner ship-modal-corner-bl"></div>
+            <div class="ship-modal-corner ship-modal-corner-br"></div>
+            
+            <div class="ship-modal-grid">
+                <div class="ship-modal-header">
+                    <h2 class="ship-modal-title" id="shipModalTitle">Ship Name</h2>
+                    <button class="ship-modal-close" id="shipModalClose">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                
+                <div class="ship-modal-image-container">
+                    <img src="/placeholder.svg" alt="Ship" class="ship-modal-image" id="shipModalImage">
+                </div>
+                
+                <div class="ship-modal-specs">
+                    <h3 class="ship-modal-specs-title">Specifiche Tecniche</h3>
+                    
+                    <div class="ship-modal-specs-grid" id="shipModalSpecsGrid">
+                        <!-- Specs will be populated dynamically -->
+                    </div>
+                    
+                    <div class="ship-modal-description" id="shipModalDescription">
+                        <!-- Description will be populated dynamically -->
+                    </div>
+                    
+                    <div class="ship-modal-download">
+                        <a href="#" class="btn" id="shipModalDownload">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Header -->
@@ -920,83 +1512,179 @@
 
             <div class="fleet-container">
                 <!-- Ship Card 1 -->
-                <div class="ship-card">
-                    <img src="static/cpt-ahmad-II-flotta-i-barbon.jpg" alt="Cpt Ahmad II" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Cpt Ahmad II</h3>
-                        <p class="ship-description">DwC TONN 4774,47 <br> owners: GULF SHIPPING CO S.A</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/CPT-AHMAD-II-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="cpt-ahmad-ii">
+                    <div class="ship-image-container">
+                        <img src="static/cpt-ahmad-II-flotta-i-barbon.jpg" alt="Cpt Ahmad II" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Cpt Ahmad II</h3>
+                        <p class="ship-info">DwC TONN 4774,47</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
 
                 <!-- Ship Card 2 -->
-                <div class="ship-card">
-                    <img src="static/lady-eva.jpg" alt="Lady Eva" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Lady Eva</h3>
-                        <p class="ship-description">DWC TONN 6559 <br> owners : eva oversea ltd</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-EVA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="lady-eva">
+                    <div class="ship-image-container">
+                        <img src="static/lady-eva.jpg" alt="Lady Eva" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Lady Eva</h3>
+                        <p class="ship-info">DWC TONN 6559</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
 
                 <!-- Ship Card 3 -->
-                <div class="ship-card">
-                    <img src="static/lady-sham-flotta-i-barbon.jpg" alt="Lady Sham" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Lady Sham</h3>
-                        <p class="ship-description">DWC TONN 9802 <br> owners : REGINA SHIPPING & TRADING LTD</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-SHAM-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="lady-sham">
+                    <div class="ship-image-container">
+                        <img src="static/lady-sham-flotta-i-barbon.jpg" alt="Lady Sham" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Lady Sham</h3>
+                        <p class="ship-info">DWC TONN 9802</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
 
                 <!-- Ship Card 4 -->
-                <div class="ship-card">
-                    <img src="static/lady-speranza.jpg" alt="Lady Speranza" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Lady Speranza</h3>
-                        <p class="ship-description">DWC TONN 16300 <br> Owners : Venice Shipmanagement Ltd</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-SPERANZA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="lady-speranza">
+                    <div class="ship-image-container">
+                        <img src="static/lady-speranza.jpg" alt="Lady Speranza" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Lady Speranza</h3>
+                        <p class="ship-info">DWC TONN 16300</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
 
                  <!-- Ship Card 5 -->
-                <div class="ship-card">
-                    <img src="static/Lady-divina_2.jpg" alt="Lady Divina" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Lady Divina</h3>
-                        <p class="ship-description">DWCC 18901 <br> Owners : DIVINA SHIPMANAGEMENT AND TRADING</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-DIVINA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="lady-divina">
+                    <div class="ship-image-container">
+                        <img src="static/Lady-divina_2.jpg" alt="Lady Divina" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Lady Divina</h3>
+                        <p class="ship-info">DWCC 18901</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
 
                 <!-- Ship Card 6 -->
-                <div class="ship-card">
-                    <img src="static/WhatsApp-Image-2021-06-17-at-18.08.02-1.jpeg" alt="Lady Laguna" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Lady Laguna</h3>
-                        <p class="ship-description">DWC TONN 22284 <br> owners: LAGUNA MARINE LTD</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-LAGUNA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="lady-laguna">
+                    <div class="ship-image-container">
+                        <img src="static/WhatsApp-Image-2021-06-17-at-18.08.02-1.jpeg" alt="Lady Laguna" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Lady Laguna</h3>
+                        <p class="ship-info">DWC TONN 22284</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
 
                 <!-- Ship Card 7 -->
-                <div class="ship-card">
-                    <img src="static/lady-venezia-i-barbon.jpg" alt="Lady Venezia" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Lady Venezia</h3>
-                        <p class="ship-description">DWCC TONN 28207 <br> owners: VENEZIA SHIPTRADING LTD.</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-VENEZIA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="lady-venezia">
+                    <div class="ship-image-container">
+                        <img src="static/lady-venezia-i-barbon.jpg" alt="Lady Venezia" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Lady Venezia</h3>
+                        <p class="ship-info">DWCC TONN 28207</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
 
                 <!-- Ship Card 8 -->
-                <div class="ship-card">
-                    <img src="static/lady-lavela-i-barbon.jpg" alt="Lady Lavela" class="ship-image">
-                    <div class="ship-content">
-                        <h3 class="ship-title">Lady Lavela</h3>
-                        <p class="ship-description">DWCC TONN 28316 <br> owners: VENEZIA SHIPTRADING LTD.</p>
-                        <a href="https://www.ibarbon.com/wp-content/uploads/2024/10/LADY-LAVELA-SHIP-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                <div class="ship-card" data-ship-id="lady-lavela">
+                    <div class="ship-image-container">
+                        <img src="static/lady-lavela-i-barbon.jpg" alt="Lady Lavela" class="ship-image">
                     </div>
+                    <div class="ship-overlay">
+                        <h3 class="ship-title">Lady Lavela</h3>
+                        <p class="ship-info">DWCC TONN 28316</p>
+                    </div>
+                    <div class="ship-click-info">
+                        <div class="click-info-content">
+                            <i class="fas fa-search click-info-icon"></i>
+                            <h4>Dettagli Tecnici</h4>
+                            <p>Clicca per visualizzare tutte le specifiche tecniche della nave</p>
+                        </div>
+                    </div>
+                    <div class="ship-corner ship-corner-tl"></div>
+                    <div class="ship-corner ship-corner-tr"></div>
+                    <div class="ship-corner ship-corner-bl"></div>
+                    <div class="ship-corner ship-corner-br"></div>
                 </div>
             </div>
         </div>
@@ -1075,6 +1763,138 @@
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
     <script>
+        // Ship data
+        const shipData = {
+            'cpt-ahmad-ii': {
+                name: 'Cpt Ahmad II',
+                image: 'static/cpt-ahmad-II-flotta-i-barbon.jpg',
+                description: 'La Cpt Ahmad II è una nave cargo versatile e affidabile, progettata per il trasporto di merci generali e alla rinfusa. Con la sua capacità di carico di 4774,47 tonnellate, offre soluzioni di trasporto efficienti per diverse tipologie di merci.',
+                specs: [
+                    { label: 'DWC', value: '4774,47 TONN' },
+                    { label: 'Lunghezza', value: '98.5m' },
+                    { label: 'Larghezza', value: '16.2m' },
+                    { label: 'Pescaggio', value: '5.8m' },
+                    { label: 'Velocità', value: '12 nodi' },
+                    { label: 'Anno di costruzione', value: '2010' },
+                    { label: 'Proprietario', value: 'GULF SHIPPING CO S.A' },
+                    { label: 'Bandiera', value: 'Panama' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2023/12/CPT-AHMAD-II-PARTICULARS.pdf'
+            },
+            'lady-eva': {
+                name: 'Lady Eva',
+                image: 'static/lady-eva.jpg',
+                description: 'La Lady Eva è una nave cargo moderna ed efficiente, ideale per il trasporto di merci generali e alla rinfusa. Con una capacità di carico di 6559 tonnellate, offre soluzioni logistiche ottimali per diverse esigenze di trasporto marittimo.',
+                specs: [
+                    { label: 'DWC', value: '6559 TONN' },
+                    { label: 'Lunghezza', value: '105.7m' },
+                    { label: 'Larghezza', value: '17.8m' },
+                    { label: 'Pescaggio', value: '6.2m' },
+                    { label: 'Velocità', value: '13 nodi' },
+                    { label: 'Anno di costruzione', value: '2012' },
+                    { label: 'Proprietario', value: 'EVA OVERSEA LTD' },
+                    { label: 'Bandiera', value: 'Malta' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-EVA-PARTICULARS.pdf'
+            },
+            'lady-sham': {
+                name: 'Lady Sham',
+                image: 'static/lady-sham-flotta-i-barbon.jpg',
+                description: 'La Lady Sham è una nave cargo di medie dimensioni, progettata per garantire efficienza e affidabilità nel trasporto marittimo. Con una capacità di carico di 9802 tonnellate, è ideale per il trasporto di merci generali e alla rinfusa su rotte internazionali.',
+                specs: [
+                    { label: 'DWC', value: '9802 TONN' },
+                    { label: 'Lunghezza', value: '118.3m' },
+                    { label: 'Larghezza', value: '19.4m' },
+                    { label: 'Pescaggio', value: '7.1m' },
+                    { label: 'Velocità', value: '14 nodi' },
+                    { label: 'Anno di costruzione', value: '2013' },
+                    { label: 'Proprietario', value: 'REGINA SHIPPING & TRADING LTD' },
+                    { label: 'Bandiera', value: 'Malta' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-SHAM-PARTICULARS.pdf'
+            },
+            'lady-speranza': {
+                name: 'Lady Speranza',
+                image: 'static/lady-speranza.jpg',
+                description: 'La Lady Speranza è una nave cargo di grandi dimensioni, progettata per il trasporto efficiente di merci alla rinfusa. Con una capacità di carico di 16300 tonnellate, offre soluzioni logistiche ottimali per il trasporto di grandi volumi di merci.',
+                specs: [
+                    { label: 'DWC', value: '16300 TONN' },
+                    { label: 'Lunghezza', value: '149.8m' },
+                    { label: 'Larghezza', value: '22.6m' },
+                    { label: 'Pescaggio', value: '8.5m' },
+                    { label: 'Velocità', value: '15 nodi' },
+                    { label: 'Anno di costruzione', value: '2015' },
+                    { label: 'Proprietario', value: 'VENICE SHIPMANAGEMENT LTD' },
+                    { label: 'Bandiera', value: 'Italia' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-SPERANZA-PARTICULARS.pdf'
+            },
+            'lady-divina': {
+                name: 'Lady Divina',
+                image: 'static/Lady-divina_2.jpg',
+                description: 'La Lady Divina è una nave cargo moderna e versatile, ideale per il trasporto di merci alla rinfusa. Con una capacità di carico di 18901 tonnellate, offre soluzioni logistiche efficienti per diverse esigenze di trasporto marittimo internazionale.',
+                specs: [
+                    { label: 'DWCC', value: '18901 TONN' },
+                    { label: 'Lunghezza', value: '156.2m' },
+                    { label: 'Larghezza', value: '23.1m' },
+                    { label: 'Pescaggio', value: '8.7m' },
+                    { label: 'Velocità', value: '15 nodi' },
+                    { label: 'Anno di costruzione', value: '2016' },
+                    { label: 'Proprietario', value: 'DIVINA SHIPMANAGEMENT AND TRADING' },
+                    { label: 'Bandiera', value: 'Malta' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-DIVINA-PARTICULARS.pdf'
+            },
+            'lady-laguna': {
+                name: 'Lady Laguna',
+                image: 'static/WhatsApp-Image-2021-06-17-at-18.08.02-1.jpeg',
+                description: 'La Lady Laguna è una nave cargo di grandi dimensioni, progettata per il trasporto efficiente di merci alla rinfusa. Con una capacità di carico di 22284 tonnellate, è ideale per il trasporto di grandi volumi di merci su rotte internazionali.',
+                specs: [
+                    { label: 'DWC', value: '22284 TONN' },
+                    { label: 'Lunghezza', value: '162.5m' },
+                    { label: 'Larghezza', value: '24.8m' },
+                    { label: 'Pescaggio', value: '9.2m' },
+                    { label: 'Velocità', value: '14 nodi' },
+                    { label: 'Anno di costruzione', value: '2017' },
+                    { label: 'Proprietario', value: 'LAGUNA MARINE LTD' },
+                    { label: 'Bandiera', value: 'Malta' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-LAGUNA-PARTICULARS.pdf'
+            },
+            'lady-venezia': {
+                name: 'Lady Venezia',
+                image: 'static/lady-venezia-i-barbon.jpg',
+                description: 'La Lady Venezia è una nave cargo di grandi dimensioni, progettata per il trasporto efficiente di merci alla rinfusa. Con una capacità di carico di 28207 tonnellate, offre soluzioni logistiche ottimali per il trasporto di grandi volumi di merci.',
+                specs: [
+                    { label: 'DWCC', value: '28207 TONN' },
+                    { label: 'Lunghezza', value: '169.4m' },
+                    { label: 'Larghezza', value: '27.2m' },
+                    { label: 'Pescaggio', value: '9.8m' },
+                    { label: 'Velocità', value: '14 nodi' },
+                    { label: 'Anno di costruzione', value: '2018' },
+                    { label: 'Proprietario', value: 'VENEZIA SHIPTRADING LTD' },
+                    { label: 'Bandiera', value: 'Italia' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-VENEZIA-PARTICULARS.pdf'
+            },
+            'lady-lavela': {
+                name: 'Lady Lavela',
+                image: 'static/lady-lavela-i-barbon.jpg',
+                description: 'La Lady Lavela è una nave cargo di grandi dimensioni, progettata per il trasporto efficiente di merci alla rinfusa. Con una capacità di carico di 28316 tonnellate, è ideale per il trasporto di grandi volumi di merci su rotte internazionali.',
+                specs: [
+                    { label: 'DWCC', value: '28316 TONN' },
+                    { label: 'Lunghezza', value: '170.1m' },
+                    { label: 'Larghezza', value: '27.5m' },
+                    { label: 'Pescaggio', value: '9.9m' },
+                    { label: 'Velocità', value: '14 nodi' },
+                    { label: 'Anno di costruzione', value: '2019' },
+                    { label: 'Proprietario', value: 'VENEZIA SHIPTRADING LTD' },
+                    { label: 'Bandiera', value: 'Italia' }
+                ],
+                downloadUrl: 'https://www.ibarbon.com/wp-content/uploads/2024/10/LADY-LAVELA-SHIP-PARTICULARS.pdf'
+            }
+        };
+
         // Preloader
         window.addEventListener('load', function() {
             const preloader = document.querySelector('.preloader');
@@ -1189,39 +2009,108 @@
             subtitles.forEach(subtitle => {
                 subtitle.classList.add('visible');
             });
+            
+            // Initialize ship modal functionality
+            initShipModal();
         });
 
-        // Basic scroll animation for ship cards
-        document.addEventListener('DOMContentLoaded', function() {
+        // Ship Modal Functionality
+        function initShipModal() {
             const shipCards = document.querySelectorAll('.ship-card');
+            const shipModalOverlay = document.getElementById('shipModalOverlay');
+            const shipModal = shipModalOverlay.querySelector('.ship-modal');
+            const shipModalClose = document.getElementById('shipModalClose');
+            const shipModalTitle = document.getElementById('shipModalTitle');
+            const shipModalImage = document.getElementById('shipModalImage');
+            const shipModalSpecsGrid = document.getElementById('shipModalSpecsGrid');
+            const shipModalDescription = document.getElementById('shipModalDescription');
+            const shipModalDownload = document.getElementById('shipModalDownload');
             
-            // Function to check if element is in viewport
-            const isInViewport = (el) => {
-                const rect = el.getBoundingClientRect();
-                return (
-                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 &&
-                    rect.bottom >= 0
-                );
-            };
-            
-            // Function to handle scroll animation
-            const handleScrollAnimation = () => {
-                shipCards.forEach((card, index) => {
-                    if (isInViewport(card)) {
-                        // Add delay based on index for staggered appearance
-                        setTimeout(() => {
-                            card.classList.add('visible');
-                        }, index * 150); // 150ms delay between each card animation
+            // Open modal when clicking on a ship card
+            shipCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const shipId = card.getAttribute('data-ship-id');
+                    const ship = shipData[shipId];
+                    
+                    if (ship) {
+                        // Set modal content
+                        shipModalTitle.textContent = ship.name;
+                        shipModalImage.src = ship.image;
+                        shipModalImage.alt = ship.name;
+                        shipModalDescription.textContent = ship.description;
+                        shipModalDownload.href = ship.downloadUrl;
+                        
+                        // Clear and populate specs grid
+                        shipModalSpecsGrid.innerHTML = '';
+                        ship.specs.forEach(spec => {
+                            const specItem = document.createElement('div');
+                            specItem.classList.add('ship-modal-spec-item');
+                            
+                            const specLabel = document.createElement('span');
+                            specLabel.classList.add('ship-modal-spec-label');
+                            specLabel.textContent = spec.label;
+                            
+                            const specValue = document.createElement('span');
+                            specValue.classList.add('ship-modal-spec-value');
+                            specValue.textContent = spec.value;
+                            
+                            specItem.appendChild(specLabel);
+                            specItem.appendChild(specValue);
+                            shipModalSpecsGrid.appendChild(specItem);
+                        });
+                        
+                        // Show modal with animation
+                        shipModalOverlay.classList.add('active');
+                        document.body.style.overflow = 'hidden'; // Prevent scrolling
+                        
+                        // Add futuristic scanning effect
+                        addScanningEffect();
                     }
                 });
-            };
+            });
             
-            // Check on scroll
-            window.addEventListener('scroll', handleScrollAnimation);
+            // Close modal when clicking the close button
+            shipModalClose.addEventListener('click', closeModal);
             
-            // Check on initial load
-            handleScrollAnimation();
-        });
+            // Close modal when clicking outside
+            shipModalOverlay.addEventListener('click', (e) => {
+                if (e.target === shipModalOverlay) {
+                    closeModal();
+                }
+            });
+            
+            // Close modal with Escape key
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape' && shipModalOverlay.classList.contains('active')) {
+                    closeModal();
+                }
+            });
+            
+            function closeModal() {
+                shipModalOverlay.classList.remove('active');
+                document.body.style.overflow = ''; // Restore scrolling
+                
+                // Reset modal content after animation completes
+                setTimeout(() => {
+                    shipModalTitle.textContent = '';
+                    shipModalImage.src = '';
+                    shipModalSpecsGrid.innerHTML = '';
+                    shipModalDescription.textContent = '';
+                }, 500);
+            }
+            
+            // Add futuristic scanning effect
+            function addScanningEffect() {
+                // Reset animation by removing and re-adding the element
+                const scanner = document.querySelector('.ship-modal-scanner');
+                const parent = scanner.parentNode;
+                parent.removeChild(scanner);
+                
+                const newScanner = document.createElement('div');
+                newScanner.classList.add('ship-modal-scanner');
+                parent.appendChild(newScanner);
+            }
+        }
     </script>
 </body>
 </html>
