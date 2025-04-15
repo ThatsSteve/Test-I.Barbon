@@ -1,0 +1,1227 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flotta - I.Barbon</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset e stili generali */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #309ce4;
+            --primary-dark: #164464;
+            --secondary: #283c54;
+            --text-light: #85949e;
+            --white: #ffffff;
+            --light-bg: #f9f9f9;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+
+        body {
+            overflow-x: hidden;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--secondary);
+            background-color: var(--white);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 12px 24px; /* Reduced button size */
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.9rem; /* Reduced font size */
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 5px 10px rgba(48, 156, 228, 0.2); /* Reduced shadow */
+            z-index: 1;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover {
+            transform: translateY(-3px); /* Reduced hover translate */
+            box-shadow: 0 8px 16px rgba(48, 156, 228, 0.3); /* Reduced shadow */
+        }
+
+        .btn:hover:before {
+            transform: translateX(100%);
+        }
+
+        .section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 0;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .section-title.centered {
+            text-align: center;
+            display: block;
+        }
+
+        .section-title.centered:after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.26rem;
+            max-width: 800px;
+            margin: 0 auto 60px;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+            transition-delay: 0.2s;
+        }
+
+        .section-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            background-color: rgba(40, 60, 84, 0.95);
+            padding: 15px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 123px;
+            height: auto;
+            position: relative;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        .logo img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: nowrap;
+            transition: var(--transition);
+        }
+
+        .nav-links a {
+            color: var(--white);
+            margin: 0 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+            padding: 8px 0;
+            white-space: nowrap;
+        }
+
+        /* Dropdown styling */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown > a:after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 4px;
+            transition: var(--transition);
+            color: var(--primary);
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .dropdown:hover > a:after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: var(--secondary);
+            min-width: 187px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 10px 0;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-content:before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary);
+        }
+
+        .dropdown-content a {
+            color: var(--white);
+            padding: 12px 15px;
+            display: block;
+            margin: 0;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            line-height: 1.4;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-dark);
+            transform: translateX(5px);
+        }
+
+        .dropdown-content a:before {
+            display: none;
+        }
+
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .language-selector img {
+            width: 20px;
+            height: auto;
+            margin-right: 8px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1001;
+            box-shadow: 0 5px 15px rgba(48, 156, 228, 0.3);
+            transition: var(--transition);
+            margin-left: 15px;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background-color: var(--white);
+            margin: 2px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* Fleet Presentation Styles */
+        .fleet-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 50px;
+        }
+
+        .ship-card {
+            width: 80%;
+            max-width: 800px;
+            margin-bottom: 40px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            position: relative;
+            opacity: 0;
+            transform: translateY(50px);
+            visibility: hidden; /* Hide ships initially */
+        }
+
+        .ship-card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            visibility: visible;
+        }
+
+        .ship-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
+        }
+
+        .ship-image {
+            width: 100%;
+            height: auto;
+            border-bottom: 1px solid var(--light-bg);
+        }
+
+        .ship-content {
+            padding: 30px;
+            text-align: left;
+        }
+
+        .ship-title {
+            color: var(--primary-dark);
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .ship-description {
+            color: var(--text-light);
+            font-size: 1.1rem;
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        /* Mobile-specific styles for ship cards */
+        @media (max-width: 768px) {
+            .ship-content .btn {
+                padding: 10px 20px; /* 15% smaller button */
+                font-size: 0.77rem; /* 15% smaller font */
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 100%;
+            }
+            
+            .ship-description {
+                font-size: 1rem;
+                line-height: 1.5;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+            
+            .ship-title {
+                font-size: 1.5rem;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        /* Responsive Grid for Ship Cards */
+        @media (min-width: 768px) {
+            .fleet-container {
+                flex-direction: row;
+                flex-wrap: wrap;
+                justify-content: space-around;
+            }
+
+            .ship-card {
+                width: 45%; /* Two ships per row on larger screens */
+            }
+        }
+
+        @media (max-width: 767px) {
+            .ship-card {
+                width: 100%; /* One ship per row on smaller screens */
+            }
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-top {
+            padding: 80px 0 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23ffffff'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-links a {
+            margin-bottom: 12px;
+            transition: var(--transition);
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .contact-info {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-top: 5px;
+        }
+
+        .contact-info p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 25px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 70vh; /* Changed from 400px to 70vh to match chi-siamo.html */
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('static/top-noleggio-navi-i-barbon.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 60, 84, 0.7);
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: var(--white);
+            max-width: 900px;
+            padding: 0 20px;
+            z-index: 2;
+            margin-top: 150px; /* Added margin-top to match chi-siamo.html */
+        }
+
+        .hero-title {
+            font-size: 4rem; /* Changed from 2.5rem to 4rem to match chi-siamo.html */
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2; /* Changed from 1.4 to 1.2 to match chi-siamo.html */
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.5s;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(48, 156, 228, 0.3);
+            z-index: 999;
+            font-size: 1.2rem; /* Added explicit font size */
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 1200px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background-color: var(--secondary);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 100px 40px 40px;
+                transition: var(--transition);
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            header .header-container {
+                position: relative;
+                z-index: 1002;
+            }
+            
+            .hamburger {
+                position: relative;
+                z-index: 1002;
+            }
+            
+            .nav-links a {
+                margin: 15px 0;
+                font-size: 1.2rem;
+                width: 100%;
+            }
+            
+            .dropdown {
+                width: 100%;
+            }
+            
+            .dropdown-content {
+                position: static;
+                background-color: rgba(0, 0, 0, 0.1);
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                display: none;
+                padding: 0;
+                width: 100%;
+                margin-top: 10px;
+                border-radius: 5px;
+                min-width: auto;
+            }
+            
+            .dropdown-content a {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+                line-height: 1.4;
+            }
+            
+            .dropdown-content:before {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-content {
+                display: block;
+            }
+            
+            .dropdown > a:after {
+                content: '\f107';
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                margin-left: 10px;
+                transition: var(--transition);
+            }
+            
+            .dropdown.active > a:after {
+                transform: rotate(180deg);
+            }
+            
+            .language-selector {
+                margin-left: 0;
+                margin-top: 20px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .section {
+                padding: 80px 0;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .hero-title {
+                font-size: 2.4rem;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .logo {
+                width: 101px;
+            }
+            
+            .hero-title {
+                font-size: 2rem;
+            }
+            
+            .btn {
+                padding: 16px 30px;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .dropdown-content a {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html"><img src="static/logo-i-barbon.png" alt="I.Barbon Logo"></a>
+            </div>
+            <div class="nav-container">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="chi-siamo.html" class="nav-link">Chi siamo</a>
+                    <a href="chartering.html" class="nav-link">Chartering</a>
+                    <a href="flotta.html" class="nav-link">Flotta</a>
+                    <div class="dropdown">
+                        <a href="trasporti-internazionali.html">Trasporti internazionali</a>
+                        <div class="dropdown-content">
+                            <a href="trasporti-internazionali.html">Marittimo</a>
+                            <a href="trasporti-internazionali.html">Aereo</a>
+                            <a href="trasporti-internazionali.html">Terrestre</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="servizi.html">Servizi</a>
+                        <div class="dropdown-content">
+                            <a href="servizi.html">Logistica</a>
+                            <a href="servizi.html">Consulenza</a>
+                            <a href="servizi.html">Assicurazioni</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="informazioni.html">Informazioni</a>
+                        <div class="dropdown-content">
+                            <a href="informazioni.html">FAQ</a>
+                            <a href="informazioni.html">Documenti</a>
+                            <a href="informazioni.html">Normative</a>
+                        </div>
+                    </div>
+                    <a href="blog.html" class="nav-link">Blog</a>
+                    <a href="form.html" class="nav-link">Contatti</a>
+                    <div class="dropdown language-selector">
+                        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg" alt="Italiano"> IT</a>
+                        <div class="dropdown-content">
+                            <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" alt="English"> EN</a>
+                            <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" alt="Français"> FR</a>
+                            <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg" alt="Deutsch"> DE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">La Nostra Flotta</h1>
+        </div>
+    </section>
+
+    <!-- Fleet Section -->
+    <section class="section" id="fleet">
+        <div class="container">
+            <h2 class="section-title centered reveal">Le Nostre Navi</h2>
+            <p class="section-subtitle text-center reveal">Esplora la nostra flotta di navi specializzate per il trasporto marittimo.</p>
+
+            <div class="fleet-container">
+                <!-- Ship Card 1 -->
+                <div class="ship-card">
+                    <img src="static/cpt-ahmad-II-flotta-i-barbon.jpg" alt="Cpt Ahmad II" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Cpt Ahmad II</h3>
+                        <p class="ship-description">DwC TONN 4774,47 <br> owners: GULF SHIPPING CO S.A</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/CPT-AHMAD-II-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+
+                <!-- Ship Card 2 -->
+                <div class="ship-card">
+                    <img src="static/lady-eva.jpg" alt="Lady Eva" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Lady Eva</h3>
+                        <p class="ship-description">DWC TONN 6559 <br> owners : eva oversea ltd</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-EVA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+
+                <!-- Ship Card 3 -->
+                <div class="ship-card">
+                    <img src="static/lady-sham-flotta-i-barbon.jpg" alt="Lady Sham" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Lady Sham</h3>
+                        <p class="ship-description">DWC TONN 9802 <br> owners : REGINA SHIPPING & TRADING LTD</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-SHAM-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+
+                <!-- Ship Card 4 -->
+                <div class="ship-card">
+                    <img src="static/lady-speranza.jpg" alt="Lady Speranza" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Lady Speranza</h3>
+                        <p class="ship-description">DWC TONN 16300 <br> Owners : Venice Shipmanagement Ltd</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-SPERANZA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+
+                 <!-- Ship Card 5 -->
+                <div class="ship-card">
+                    <img src="static/Lady-divina_2.jpg" alt="Lady Divina" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Lady Divina</h3>
+                        <p class="ship-description">DWCC 18901 <br> Owners : DIVINA SHIPMANAGEMENT AND TRADING</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-DIVINA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+
+                <!-- Ship Card 6 -->
+                <div class="ship-card">
+                    <img src="static/WhatsApp-Image-2021-06-17-at-18.08.02-1.jpeg" alt="Lady Laguna" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Lady Laguna</h3>
+                        <p class="ship-description">DWC TONN 22284 <br> owners: LAGUNA MARINE LTD</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-LAGUNA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+
+                <!-- Ship Card 7 -->
+                <div class="ship-card">
+                    <img src="static/lady-venezia-i-barbon.jpg" alt="Lady Venezia" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Lady Venezia</h3>
+                        <p class="ship-description">DWCC TONN 28207 <br> owners: VENEZIA SHIPTRADING LTD.</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2023/12/LADY-VENEZIA-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+
+                <!-- Ship Card 8 -->
+                <div class="ship-card">
+                    <img src="static/lady-lavela-i-barbon.jpg" alt="Lady Lavela" class="ship-image">
+                    <div class="ship-content">
+                        <h3 class="ship-title">Lady Lavela</h3>
+                        <p class="ship-description">DWCC TONN 28316 <br> owners: VENEZIA SHIPTRADING LTD.</p>
+                        <a href="https://www.ibarbon.com/wp-content/uploads/2024/10/LADY-LAVELA-SHIP-PARTICULARS.pdf" class="btn">Scarica la scheda tecnica</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-wave"></div>
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <h3>Dati aziendali</h3>
+                        <div class="contact-info">
+                            <i class="fas fa-building"></i>
+                            <p>I.Barbon S.r.l.</p>
+                        </div>
+                        <div class="contact-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p><a href="https://maps.google.com/?q=Viale+Ancona,+26,+Venezia+Mestre" target="_blank">Viale Ancona, 26, Venezia Mestre</a></p>
+                        </div>
+                        <div class="contact-info">
+                            <i class="fas fa-phone"></i>
+                            <p><a href="tel:+390415314444">+39.041.5314444</a></p>
+                        </div>
+                        <div class="contact-info">
+                            <i class="fas fa-envelope"></i>
+                            <p><a href="mailto:info@ibarbon.com">info@ibarbon.com</a></p>
+                        </div>
+                        <div class="social-icons">
+                            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Chartering</h3>
+                        <div class="footer-links">
+                            <a href="flotta.html">Flotta</a>
+                            <a href="chartering.html">Servizi di noleggio</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Trasporti internazionali</h3>
+                        <div class="footer-links">
+                            <a href="trasporti-internazionali.html">Trasporto marittimo</a>
+                            <a href="trasporti-internazionali.html">Trasporto aereo</a>
+                            <a href="trasporti-internazionali.html">Trasporto su gomma</a>
+                            <a href="trasporti-internazionali.html">Trasporto container completo e groupage</a>
+                            <a href="trasporti-internazionali.html">Trasporto project cargo</a>
+                            <a href="trasporti-internazionali.html">Trasporto Ro-Ro</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Servizi e logistica</h3>
+                        <div class="footer-links">
+                            <a href="servizi.html">Door to door</a>
+                            <a href="servizi.html">Trasporto intermodale</a>
+                            <a href="servizi.html">Consulenza doganale, assicurativa e documentale</a>
+                            <a href="servizi.html">Assistenza imbarco / sbarco</a>
+                            <a href="servizi.html">Magazzinaggio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <p>Copyright 2021 I.Barbon Srl | P.IVA02369570276 | <a href="privacy.html">privacy</a> | <a href="cookies.html">cookies</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            preloader.classList.add('fade-out');
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        });
+
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('active');
+        });
+        
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('active');
+        });
+
+        // Scroll progress
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = (window.pageYOffset / totalHeight) * 100;
+            scrollProgress.style.width = progress + '%';
+        });
+
+        // Back to top button
+        const backToTopBtn = document.querySelector('.back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('active');
+            } else {
+                backToTopBtn.classList.remove('active');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Mobile menu
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const dropdowns = document.querySelectorAll('.dropdown');
+
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+        });
+
+        // Dropdown handling for mobile
+        dropdowns.forEach(dropdown => {
+            const dropdownLink = dropdown.querySelector('a');
+            
+            dropdownLink.addEventListener('click', (e) => {
+                if (window.innerWidth <= 1200) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                }
+            });
+        });
+
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Make titles visible immediately on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const titles = document.querySelectorAll('.section-title');
+            const subtitles = document.querySelectorAll('.section-subtitle');
+            
+            titles.forEach(title => {
+                title.classList.add('visible');
+            });
+            
+            subtitles.forEach(subtitle => {
+                subtitle.classList.add('visible');
+            });
+        });
+
+        // Basic scroll animation for ship cards
+        document.addEventListener('DOMContentLoaded', function() {
+            const shipCards = document.querySelectorAll('.ship-card');
+            
+            // Function to check if element is in viewport
+            const isInViewport = (el) => {
+                const rect = el.getBoundingClientRect();
+                return (
+                    rect.top <= (window.innerHeight || document.documentElement.clientHeight) * 0.85 &&
+                    rect.bottom >= 0
+                );
+            };
+            
+            // Function to handle scroll animation
+            const handleScrollAnimation = () => {
+                shipCards.forEach((card, index) => {
+                    if (isInViewport(card)) {
+                        // Add delay based on index for staggered appearance
+                        setTimeout(() => {
+                            card.classList.add('visible');
+                        }, index * 150); // 150ms delay between each card animation
+                    }
+                });
+            };
+            
+            // Check on scroll
+            window.addEventListener('scroll', handleScrollAnimation);
+            
+            // Check on initial load
+            handleScrollAnimation();
+        });
+    </script>
+</body>
+</html>

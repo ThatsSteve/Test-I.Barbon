@@ -1,0 +1,1802 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>I.Barbon - Richiesta Informazioni</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Reset e stili generali */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        :root {
+            --primary: #309ce4;
+            --primary-dark: #164464;
+            --secondary: #283c54;
+            --text-light: #85949e;
+            --white: #ffffff;
+            --light-bg: #f9f9f9;
+            --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+
+        body {
+            overflow-x: hidden;
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--secondary);
+            background-color: var(--white);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        /* Utility Classes */
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 30px;
+        }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 18px 36px;
+            border-radius: 50px;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 1.1rem;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+            transition: var(--transition);
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(48, 156, 228, 0.2);
+            z-index: 1;
+        }
+
+        .btn:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transform: translateX(-100%);
+            transition: var(--transition);
+            z-index: -1;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(48, 156, 228, 0.3);
+        }
+
+        .btn:hover:before {
+            transform: translateX(100%);
+        }
+
+        .section {
+            padding: 120px 0;
+            position: relative;
+        }
+
+        .section-title {
+            color: var(--primary-dark);
+            font-size: 3.2rem;
+            font-weight: 700;
+            margin-bottom: 30px;
+            position: relative;
+            display: inline-block;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        .section-title.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-title:after {
+            content: '';
+            position: absolute;
+            width: 60px;
+            height: 4px;
+            background: var(--primary);
+            bottom: -10px;
+            left: 0;
+            border-radius: 2px;
+            transition: var(--transition);
+        }
+
+        .section-title.centered {
+            text-align: center;
+            display: block;
+        }
+
+        .section-title.centered:after {
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .section-subtitle {
+            color: var(--text-light);
+            font-size: 1.26rem;
+            max-width: 800px;
+            margin: 0 auto 60px;
+            line-height: 1.8;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+            transition-delay: 0.2s;
+        }
+
+        .section-subtitle.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        /* Header */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            padding: 25px 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        header.scrolled {
+            background-color: rgba(40, 60, 84, 0.95);
+            padding: 15px 0;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            width: 123px;
+            height: auto;
+            position: relative;
+            z-index: 1001;
+            transition: var(--transition);
+        }
+
+        .logo img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        .nav-container {
+            display: flex;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            flex-wrap: nowrap;
+            transition: var(--transition);
+        }
+
+        .nav-links a {
+            color: var(--white);
+            margin: 0 12px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            position: relative;
+            transition: var(--transition);
+            padding: 8px 0;
+            white-space: nowrap;
+        }
+
+        /* Dropdown styling */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Dropdown indicator */
+        .dropdown > a:after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 4px;
+            transition: var(--transition);
+            color: var(--primary);
+            display: inline-block;
+            vertical-align: middle;
+        }
+
+        .dropdown:hover > a:after {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-content {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: var(--secondary);
+            min-width: 187px;
+            border-radius: 10px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            padding: 10px 0;
+            z-index: 100;
+            overflow: hidden;
+        }
+
+        .dropdown-content:before {
+            content: '';
+            position: absolute;
+            top: -5px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 10px;
+            height: 10px;
+            background-color: var(--secondary);
+        }
+
+        .dropdown-content a {
+            color: var(--white);
+            padding: 12px 15px;
+            display: block;
+            margin: 0;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            line-height: 1.4;
+            word-wrap: break-word;
+            white-space: normal;
+        }
+
+        .dropdown-content a:hover {
+            background-color: var(--primary-dark);
+            transform: translateX(5px);
+        }
+
+        .dropdown-content a:before {
+            display: none;
+        }
+
+        .dropdown:hover .dropdown-content {
+            opacity: 1;
+            visibility: visible;
+            transform: translateX(-50%) translateY(10px);
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            margin-left: 15px;
+            position: relative;
+            white-space: nowrap;
+        }
+
+        .language-selector img {
+            width: 20px;
+            height: auto;
+            margin-right: 8px;
+            border-radius: 3px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .hamburger {
+            display: none;
+            cursor: pointer;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: var(--primary);
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 1001;
+            box-shadow: 0 5px 15px rgba(48, 156, 228, 0.3);
+            transition: var(--transition);
+            margin-left: 15px;
+        }
+
+        .hamburger span {
+            width: 24px;
+            height: 2px;
+            background-color: var(--white);
+            margin: 2px 0;
+            transition: var(--transition);
+            border-radius: 2px;
+        }
+
+        .hamburger.active span:nth-child(1) {
+            transform: translateY(6px) rotate(45deg);
+        }
+
+        .hamburger.active span:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active span:nth-child(3) {
+            transform: translateY(-6px) rotate(-45deg);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 50vh; /* Reduced from 70vh to 50vh (approximately 30% reduction) */
+            width: 100%;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-image: url('static/top-operatore-marittimo-i-barbon.jpg');
+            background-size: cover;
+            background-position: center;
+        }
+
+        .hero-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(40, 60, 84, 0.7);
+            z-index: 1;
+        }
+
+        .hero-content {
+            text-align: center;
+            color: var(--white);
+            max-width: 900px;
+            padding: 0 20px;
+            z-index: 2;
+            margin-top: 150px;
+        }
+
+        .hero-title {
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            line-height: 1.2;
+            opacity: 0;
+            transform: translateY(30px);
+            animation: fadeInUp 1s forwards 0.5s;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Form Section */
+        .form-section {
+            padding: 40px 0 80px;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background-color: var(--light-bg);
+            padding: 40px;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-container .section-subtitle {
+            font-size: 1.5rem; /* Increased from the default size (1.26rem) */
+            margin-bottom: 40px; /* Adjusted spacing */
+            font-weight: 500; /* Make it slightly bolder */
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--primary-dark);
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid rgba(40, 60, 84, 0.1);
+            border-radius: 10px;
+            font-size: 1rem;
+            color: var(--secondary);
+            transition: var(--transition);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: var(--primary);
+            outline: none;
+            box-shadow: 0 5px 15px rgba(48, 156, 228, 0.1);
+        }
+
+        .form-group textarea {
+            height: 150px;
+            resize: vertical;
+        }
+
+        /* Form Sections */
+        .form-section-container {
+            margin-bottom: 40px;
+            background-color: var(--white);
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.03);
+            transition: var(--transition);
+        }
+
+        .form-section-container:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+        }
+
+        .form-section-title {
+            color: var(--primary-dark);
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+
+        .form-section-title:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .form-section-title i {
+            margin-right: 12px;
+            color: var(--primary);
+            font-size: 1.3rem;
+        }
+
+        /* Contact Reason Section */
+        .contact-reason-container {
+            position: relative;
+        }
+
+        .contact-reason-select {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23309ce4' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 15px center;
+            background-size: 16px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        .contact-reason-select:focus {
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='%23164464' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='18 15 12 9 6 15'%3E%3C/polyline%3E%3C/svg%3E");
+        }
+
+        /* Service Selection */
+        .service-selection {
+            margin-top: 0;
+            transition: var(--transition);
+        }
+
+        .service-category {
+            margin-bottom: 30px;
+            border-bottom: 1px solid rgba(40, 60, 84, 0.1);
+            padding-bottom: 25px;
+        }
+
+        .service-category:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+            margin-bottom: 0;
+        }
+
+        .service-category-title {
+            color: var(--primary-dark);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+        }
+
+        .service-category-title i {
+            margin-right: 10px;
+            color: var(--primary);
+        }
+
+        .service-list {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .service-item {
+            margin-bottom: 15px;
+        }
+
+        .service-item label {
+            display: flex;
+            align-items: flex-start;
+            color: var(--secondary);
+            font-weight: 500;
+            cursor: pointer;
+        }
+
+        .service-item input[type="checkbox"] {
+            margin-right: 15px;
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            margin-top: 3px;
+        }
+
+        .service-subitems {
+            margin-left: 35px;
+            margin-top: 10px;
+            display: none;
+            transition: var(--transition);
+        }
+
+        .service-subitems.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .service-subitem {
+            margin-bottom: 10px;
+        }
+
+        .service-subitem label {
+            display: flex;
+            align-items: flex-start;
+            color: var(--secondary);
+            font-weight: 400;
+            cursor: pointer;
+        }
+
+        .service-subitem input[type="checkbox"] {
+            margin-right: 15px;
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+            margin-top: 3px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--secondary);
+            color: var(--white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .footer-top {
+            padding: 80px 0 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-wave {
+            position: absolute;
+            top: -100px;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23ffffff'/%3E%3C/svg%3E");
+            background-size: cover;
+            background-position: center;
+            z-index: 0;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+        }
+
+        .footer-column h3 {
+            font-size: 1.6rem;
+            font-weight: 600;
+            margin-bottom: 25px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .footer-column h3:after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 3px;
+            background-color: var(--primary);
+            border-radius: 2px;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-links a {
+            margin-bottom: 12px;
+            transition: var(--transition);
+            display: inline-block;
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+            transform: translateX(5px);
+        }
+
+        .contact-info {
+            margin-bottom: 15px;
+            display: flex;
+            align-items: flex-start;
+        }
+
+        .contact-info i {
+            margin-right: 15px;
+            color: var(--primary);
+            font-size: 1.3rem;
+            margin-top: 5px;
+        }
+
+        .contact-info p {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 1.1rem;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-icons a {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-size: 1.3rem;
+            transition: var(--transition);
+        }
+
+        .social-icons a:hover {
+            background-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .footer-bottom {
+            text-align: center;
+            padding: 25px 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 1rem;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        /* Scroll Reveal Animation */
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: var(--transition);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Confirmation Modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(40, 60, 84, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-container {
+            background-color: var(--white);
+            max-width: 500px;
+            width: 90%;
+            border-radius: 15px;
+            padding: 40px;
+            position: relative;
+            transform: translateY(30px);
+            opacity: 0;
+            transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+
+        .modal-overlay.active .modal-container {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            color: var(--text-light);
+            font-size: 1.6rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            background-color: var(--light-bg);
+        }
+
+        .modal-close:hover {
+            color: var(--primary-dark);
+            background-color: rgba(48, 156, 228, 0.1);
+        }
+
+        .modal-icon {
+            font-size: 4rem;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--primary-dark);
+            margin-bottom: 15px;
+        }
+
+        .modal-text {
+            color: var(--secondary);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+
+        /* Media Queries */
+        @media screen and (max-width: 1200px) {
+            .hamburger {
+                display: flex;
+            }
+            
+            .nav-links {
+                position: fixed;
+                top: 0;
+                right: -100%;
+                width: 300px;
+                height: 100vh;
+                background-color: var(--secondary);
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 100px 40px 40px;
+                transition: var(--transition);
+                box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+                overflow-y: auto;
+                z-index: 1000;
+            }
+            
+            .nav-links.active {
+                right: 0;
+            }
+            
+            header .header-container {
+                position: relative;
+                z-index: 1002;
+            }
+            
+            .hamburger {
+                position: relative;
+                z-index: 1002;
+            }
+            
+            .nav-links a {
+                margin: 15px 0;
+                font-size: 1.2rem;
+                width: 100%;
+            }
+            
+            .dropdown {
+                width: 100%;
+            }
+            
+            .dropdown-content {
+                position: static;
+                background-color: rgba(0, 0, 0, 0.1);
+                box-shadow: none;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                display: none;
+                padding: 0;
+                width: 100%;
+                margin-top: 10px;
+                border-radius: 5px;
+                min-width: auto;
+            }
+            
+            .dropdown-content a {
+                padding: 12px 15px;
+                font-size: 0.95rem;
+                line-height: 1.4;
+            }
+            
+            .dropdown-content:before {
+                display: none;
+            }
+            
+            .dropdown.active .dropdown-content {
+                display: block;
+            }
+            
+            .dropdown > a:after {
+                content: '\f107';
+                font-family: 'Font Awesome 6 Free';
+                font-weight: 900;
+                margin-left: 10px;
+                transition: var(--transition);
+            }
+            
+            .dropdown.active > a:after {
+                transform: rotate(180deg);
+            }
+            
+            .language-selector {
+                margin-left: 0;
+                margin-top: 20px;
+            }
+            
+            .logo-section {
+                padding-top: 100px;
+            }
+        }
+
+        @media screen and (max-width: 768px) {
+            .section {
+                padding: 80px 0;
+            }
+            
+            .section-title {
+                font-size: 2.5rem;
+            }
+            
+            .section-subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: 1fr;
+                max-width: 450px;
+                margin-left: auto;
+                margin-right: auto;
+            }
+
+            .form-section-container {
+                padding: 20px;
+            }
+            
+            .logo-section {
+                padding-top: 90px;
+            }
+            
+            .logo-section img {
+                max-width: 200px;
+            }
+        }
+
+        @media screen and (max-width: 480px) {
+            .container {
+                padding: 0 20px;
+            }
+            
+            .logo {
+                width: 101px;
+            }
+            
+            .btn {
+                padding: 16px 30px;
+                font-size: 1rem;
+            }
+            
+            .section-title {
+                font-size: 2.2rem;
+            }
+            
+            .dropdown-content a {
+                font-size: 0.9rem;
+                padding: 10px 12px;
+            }
+
+            .form-container {
+                padding: 25px;
+            }
+
+            .form-section-container {
+                padding: 15px;
+            }
+            
+            .logo-section {
+                padding-top: 80px;
+            }
+            
+            .logo-section img {
+                max-width: 180px;
+            }
+        }
+
+        /* Preloader */
+        .preloader {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--secondary);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 9999;
+            transition: opacity 0.5s ease, visibility 0.5s ease;
+        }
+
+        .preloader.fade-out {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader {
+            width: 80px;
+            height: 80px;
+            border: 5px solid rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            border-top-color: var(--primary);
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Cursor */
+        .cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: rgba(48, 156, 228, 0.5);
+            pointer-events: none;
+            mix-blend-mode: difference;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+            display: none;
+        }
+
+        .cursor.active {
+            width: 50px;
+            height: 50px;
+            background-color: rgba(48, 156, 228, 0.2);
+        }
+
+        @media (min-width: 1025px) {
+            .cursor {
+                display: block;
+            }
+        }
+
+        /* Scroll Progress */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background-color: var(--primary);
+            width: 0%;
+            z-index: 1002;
+            transition: width 0.1s ease;
+        }
+
+        /* Back to Top Button */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 50px;
+            height: 50px;
+            background-color: var(--primary);
+            color: var(--white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(48, 156, 228, 0.3);
+            z-index: 999;
+        }
+
+        .back-to-top.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Preloader -->
+    <div class="preloader">
+        <div class="loader"></div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+
+    <!-- Scroll Progress Bar -->
+    <div class="scroll-progress"></div>
+
+    <!-- Back to Top Button -->
+    <div class="back-to-top">
+        <i class="fas fa-arrow-up"></i>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <a href="index.html"><img src="static/logo-i-barbon.png" alt="I.Barbon Logo"></a>
+            </div>
+            <div class="nav-container">
+                <div class="hamburger">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </div>
+                <div class="nav-links">
+                    <a href="index.html" class="nav-link">Home</a>
+                    <a href="chi-siamo.html" class="nav-link">Chi siamo</a>
+                    <a href="chartering.html" class="nav-link">Chartering</a>
+                    <a href="flotta.html" class="nav-link">Flotta</a>
+                    <div class="dropdown">
+                        <a href="trasporti-internazionali.html">Trasporti internazionali</a>
+                        <div class="dropdown-content">
+                            <a href="trasporti-internazionali.html">Trasporto marittimo</a>
+                            <a href="trasporti-internazionali.html">Trasporto aereo</a>
+                            <a href="trasporti-internazionali.html">Trasporto su gomma</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="servizi.html">Servizi</a>
+                        <div class="dropdown-content">
+                            <a href="servizi.html">Door to door</a>
+                            <a href="servizi.html">Trasporto intermodale</a>
+                            <a href="servizi.html">Consulenza doganale, assicurativa e documentale</a>
+                            <a href="servizi.html">Assistenza imbarco e sbarco</a>
+                            <a href="servizi.html">Magazzinaggio</a>
+                        </div>
+                    </div>
+                    <div class="dropdown">
+                        <a href="informazioni.html">Informazioni</a>
+                        <div class="dropdown-content">
+                            <a href="informazioni.html">Incoterms</a>
+                            <a href="informazioni.html">Merci pericolose</a>
+                            <a href="informazioni.html">Container</a>
+                            <a href="informazioni.html">Imballaggi</a>
+                            <a href="informazioni.html">Terminologie</a>
+                            <a href="informazioni.html">Tabelle di convesione</a>
+                        </div>
+                    </div>
+                    <a href="blog.html" class="nav-link">Blog</a>
+                    <a href="form.html" class="nav-link">Contatti</a>
+                    <div class="dropdown language-selector">
+                        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg" alt="Italiano"> IT</a>
+                        <div class="dropdown-content">
+                            <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" alt="English"> EN</a>
+                            <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" alt="Français"> FR</a>
+                            <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg" alt="Deutsch"> DE</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Richiedi Informazioni</h1>
+        </div>
+    </section>
+
+    <!-- Form Section -->
+    <section class="form-section">
+        <div class="container form-container">
+            <p class="section-subtitle text-center">Compila il form sottostante per ricevere un preventivo personalizzato sui nostri servizi.</p>
+
+            <form id="contact-form" action="#" method="post">
+                <div class="form-section-container">
+                    <h3 class="form-section-title"><i class="fas fa-user-tie"></i>Informazioni di contatto</h3>
+                    <div class="form-group">
+                        <label for="azienda">Azienda (richiesto)</label>
+                        <input type="text" id="azienda" name="azienda" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="persona">Persona di riferimento (richiesto)</label>
+                        <input type="text" id="persona" name="persona" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email (richiesto)</label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="telefono">Telefono (richiesto)</label>
+                        <input type="text" id="telefono" name="telefono" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="indirizzo">Indirizzo</label>
+                        <input type="text" id="indirizzo" name="indirizzo">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="citta">Città</label>
+                        <input type="text" id="citta" name="citta">
+                    </div>
+                </div>
+
+                <!-- Contact Reason Section -->
+                <div class="form-section-container">
+                    <h3 class="form-section-title"><i class="fas fa-question-circle"></i>Motivo del contatto</h3>
+                    <div class="form-group contact-reason-container">
+                        <label for="contact-reason-select">Seleziona il motivo principale</label>
+                        <select id="contact-reason-select" class="contact-reason-select">
+                            <option value="">Seleziona il motivo del contatto</option>
+                            <option value="preventivo">Richiesta preventivo</option>
+                            <option value="informazioni">Richiesta informazioni</option>
+                            <option value="assistenza">Assistenza</option>
+                            <option value="collaborazione">Proposta di collaborazione</option>
+                            <option value="altro">Altro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Service Selection -->
+                <div class="form-section-container" id="service-selection-container">
+                    <h3 class="form-section-title"><i class="fas fa-shipping-fast"></i>Servizi di interesse</h3>
+                    
+                    <div class="service-category">
+                        <h4 class="service-category-title"><i class="fas fa-truck-moving"></i>Tipologie di Trasporto</h4>
+                        <div class="service-list">
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="trasporto" value="marittimo" class="parent-checkbox" data-target="marittimo-subitems">
+                                    Trasporto Marittimo
+                                </label>
+                                <div class="service-subitems" id="marittimo-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="marittimo" value="fcl" class="child-checkbox">
+                                            Trasporto container completo (FCL)
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="marittimo" value="lcl" class="child-checkbox">
+                                            Trasporto groupage (LCL)
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="marittimo" value="project" class="child-checkbox">
+                                            Trasporto Project Cargo (merci eccezionali/fuori misura)
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="marittimo" value="roro" class="child-checkbox">
+                                            Trasporto Ro-Ro (Roll-on/Roll-off)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="trasporto" value="aereo" class="parent-checkbox" data-target="aereo-subitems">
+                                    Trasporto Aereo
+                                </label>
+                                <div class="service-subitems" id="aereo-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="aereo" value="standard" class="child-checkbox">
+                                            Trasporto aereo standard
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="aereo" value="express" class="child-checkbox">
+                                            Trasporto aereo express
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="trasporto" value="gomma" class="parent-checkbox" data-target="gomma-subitems">
+                                    Trasporto su Gomma
+                                </label>
+                                <div class="service-subitems" id="gomma-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="gomma" value="completo" class="child-checkbox">
+                                            Carico completo
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="gomma" value="groupage" class="child-checkbox">
+                                            Groupage
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="trasporto" value="intermodale" class="parent-checkbox" data-target="intermodale-subitems">
+                                    Trasporto Intermodale
+                                </label>
+                                <div class="service-subitems" id="intermodale-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="intermodale" value="integrazione" class="child-checkbox">
+                                            Integrazione tra diverse modalità di trasporto (gomma, nave, aereo)
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="service-category">
+                        <h4 class="service-category-title"><i class="fas fa-boxes"></i>Servizi Logistici e Accessori</h4>
+                        <div class="service-list">
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="servizi" value="doortodoor" class="parent-checkbox" data-target="doortodoor-subitems">
+                                    Spedizioni "Door to Door"
+                                </label>
+                                <div class="service-subitems" id="doortodoor-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="doortodoor" value="ritiro" class="child-checkbox">
+                                            Ritiro presso il mittente e consegna diretta al destinatario
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="servizi" value="assistenza" class="parent-checkbox" data-target="assistenza-subitems">
+                                    Assistenza Operativa
+                                </label>
+                                <div class="service-subitems" id="assistenza-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="assistenza" value="imbarco" class="child-checkbox">
+                                            Imbarco e sbarco delle merci
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="assistenza" value="sicurezza" class="child-checkbox">
+                                            Movimentazione in sicurezza
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="servizi" value="consulenza" class="parent-checkbox" data-target="consulenza-subitems">
+                                    Consulenza
+                                </label>
+                                <div class="service-subitems" id="consulenza-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="consulenza" value="doganale" class="child-checkbox">
+                                            Doganale
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="consulenza" value="assicurativa" class="child-checkbox">
+                                            Assicurativa
+                                        </label>
+                                    </div>
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="consulenza" value="documentale" class="child-checkbox">
+                                            Documentale
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="service-item">
+                                <label>
+                                    <input type="checkbox" name="servizi" value="magazzinaggio" class="parent-checkbox" data-target="magazzinaggio-subitems">
+                                    Magazzinaggio
+                                </label>
+                                <div class="service-subitems" id="magazzinaggio-subitems">
+                                    <div class="service-subitem">
+                                        <label>
+                                            <input type="checkbox" name="magazzinaggio" value="stoccaggio" class="child-checkbox">
+                                            Stoccaggio e gestione merci
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section-container">
+                    <h3 class="form-section-title"><i class="fas fa-comment-alt"></i>Il tuo messaggio</h3>
+                    <div class="form-group">
+                        <label for="messaggio">Dettagli aggiuntivi sulla tua richiesta</label>
+                        <textarea id="messaggio" name="messaggio" rows="5"></textarea>
+                    </div>
+
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn">Invia Richiesta</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </section>
+    
+    <!-- Confirmation Modal -->
+    <div class="modal-overlay" id="confirmation-modal">
+        <div class="modal-container">
+            <div class="modal-close"><i class="fas fa-times"></i></div>
+            <div class="modal-icon"><i class="fas fa-check-circle"></i></div>
+            <h3 class="modal-title">Grazie per averci contattato!</h3>
+            <p class="modal-text">La tua richiesta è stata inviata con successo. Un nostro esperto ti contatterà al più presto per fornirti tutte le informazioni necessarie.</p>
+            <button class="btn">Chiudi</button>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="footer-wave"></div>
+        <div class="footer-top">
+            <div class="container">
+                <div class="footer-grid">
+                    <div class="footer-column">
+                        <h3>Dati aziendali</h3>
+                        <div class="contact-info">
+                            <i class="fas fa-building"></i>
+                            <p>I.Barbon S.r.l.</p>
+                        </div>
+                        <div class="contact-info">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <p><a href="https://maps.google.com/?q=Viale+Ancona,+26,+Venezia+Mestre" target="_blank">Viale Ancona, 26, Venezia Mestre</a></p>
+                        </div>
+                        <div class="contact-info">
+                            <i class="fas fa-phone"></i>
+                            <p><a href="tel:+390415314444">+39.041.5314444</a></p>
+                        </div>
+                        <div class="contact-info">
+                            <i class="fas fa-envelope"></i>
+                            <p><a href="mailto:info@ibarbon.com">info@ibarbon.com</a></p>
+                        </div>
+                         <div class="social-icons">
+                            <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                            <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Chartering</h3>
+                        <div class="footer-links">
+                            <a href="flotta.html">Flotta</a>
+                            <a href="chartering.html">Servizi di noleggio</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Trasporti internazionali</h3>
+                        <div class="footer-links">
+                            <a href="trasporti-internazionali.html">Trasporto marittimo</a>
+                            <a href="trasporti-internazionali.html">Trasporto aereo</a>
+                            <a href="trasporti-internazionali.html">Trasporto su gomma</a>
+                            <a href="trasporti-internazionali.html">Trasporto container completo e groupage</a>
+                            <a href="trasporti-internazionali.html">Trasporto project cargo</a>
+                            <a href="trasporti-internazionali.html">Trasporto Ro-Ro</a>
+                        </div>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h3>Servizi e logistica</h3>
+                        <div class="footer-links">
+                            <a href="servizi.html">Door to door</a>
+                            <a href="servizi.html">Trasporto intermodale</a>
+                            <a href="servizi.html">Consulenza doganale, assicurativa e documentale</a>
+                            <a href="servizi.html">Assistenza imbarco / sbarco</a>
+                            <a href="servizi.html">Magazzinaggio</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            <div class="container">
+                <p>Copyright 2021 I.Barbon Srl | P.IVA02369570276 | <a href="privacy.html">privacy</a> | <a href="cookies.html">cookies</a></p>
+            </div>
+        </div>
+    </footer>
+
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script>
+    <script>
+        // Preloader
+        window.addEventListener('load', function() {
+            const preloader = document.querySelector('.preloader');
+            preloader.classList.add('fade-out');
+            setTimeout(() => {
+                preloader.style.display = 'none';
+            }, 500);
+        });
+
+        // Custom cursor
+        const cursor = document.querySelector('.cursor');
+        
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX + 'px';
+            cursor.style.top = e.clientY + 'px';
+        });
+        
+        document.addEventListener('mousedown', () => {
+            cursor.classList.add('active');
+        });
+        
+        document.addEventListener('mouseup', () => {
+            cursor.classList.remove('active');
+        });
+
+        // Scroll progress
+        window.addEventListener('scroll', () => {
+            const scrollProgress = document.querySelector('.scroll-progress');
+            const totalHeight = document.body.scrollHeight - window.innerHeight;
+            const progress = (window.pageYOffset / totalHeight) * 100;
+            scrollProgress.style.width = progress + '%';
+        });
+
+        // Back to top button
+        const backToTopBtn = document.querySelector('.back-to-top');
+        
+        window.addEventListener('scroll', () => {
+            if (window.pageYOffset > 300) {
+                backToTopBtn.classList.add('active');
+            } else {
+                backToTopBtn.classList.remove('active');
+            }
+        });
+        
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Mobile menu
+        const hamburger = document.querySelector('.hamburger');
+        const navLinks = document.querySelector('.nav-links');
+        const dropdowns = document.querySelectorAll('.dropdown');
+        
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navLinks.classList.toggle('active');
+            document.body.classList.toggle('no-scroll');
+        });
+        
+        // Dropdown handling for mobile
+        dropdowns.forEach(dropdown => {
+            const dropdownLink = dropdown.querySelector('a');
+            
+            dropdownLink.addEventListener('click', (e) => {
+                if (window.innerWidth <= 1200) {
+                    e.preventDefault();
+                    dropdown.classList.toggle('active');
+                }
+            });
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', () => {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+
+        // Scroll reveal animation
+        function revealOnScroll() {
+            const reveals = document.querySelectorAll('.reveal');
+            
+            reveals.forEach(element => {
+                const windowHeight = window.innerHeight;
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('active');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', revealOnScroll);
+        window.addEventListener('load', revealOnScroll);
+
+        // Section titles animation
+        function animateTitles() {
+            const titles = document.querySelectorAll('.section-title');
+            const subtitles = document.querySelectorAll('.section-subtitle');
+            
+            titles.forEach(title => {
+                const windowHeight = window.innerHeight;
+                const elementTop = title.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    title.classList.add('visible');
+                }
+            });
+            
+            subtitles.forEach(subtitle => {
+                const windowHeight = window.innerHeight;
+                const elementTop = subtitle.getBoundingClientRect().top;
+                const elementVisible = 150;
+                
+                if (elementTop < windowHeight - elementVisible) {
+                    subtitle.classList.add('visible');
+                }
+            });
+        }
+        
+        window.addEventListener('scroll', animateTitles);
+        window.addEventListener('load', animateTitles);
+
+        // Parent-child checkbox functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show/hide subitems when parent checkbox is clicked
+            const parentCheckboxes = document.querySelectorAll('.parent-checkbox');
+            
+            parentCheckboxes.forEach(checkbox => {
+                // Initial state
+                const targetId = checkbox.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                
+                if (checkbox.checked) {
+                    targetElement.classList.add('active');
+                }
+                
+                // Click event
+                checkbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        targetElement.classList.add('active');
+                        
+                        // Check all child checkboxes
+                        const childCheckboxes = targetElement.querySelectorAll('.child-checkbox');
+                        childCheckboxes.forEach(childBox => {
+                            childBox.checked = true;
+                        });
+                    } else {
+                        targetElement.classList.remove('active');
+                        
+                        // Uncheck all child checkboxes
+                        const childCheckboxes = targetElement.querySelectorAll('.child-checkbox');
+                        childCheckboxes.forEach(childBox => {
+                            childBox.checked = false;
+                        });
+                    }
+                });
+            });
+            
+            // Handle child checkboxes
+            const childCheckboxes = document.querySelectorAll('.child-checkbox');
+            
+            childCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', function() {
+                    const parentElement = this.closest('.service-subitems');
+                    const parentId = parentElement.id;
+                    const parentCheckbox = document.querySelector(`.parent-checkbox[data-target="${parentId}"]`);
+                    
+                    // Check if all siblings are checked
+                    const siblings = parentElement.querySelectorAll('.child-checkbox');
+                    const allChecked = Array.from(siblings).every(sibling => sibling.checked);
+                    const anyChecked = Array.from(siblings).some(sibling => sibling.checked);
+                    
+                    if (allChecked) {
+                        parentCheckbox.checked = true;
+                        parentCheckbox.indeterminate = false;
+                    } else if (anyChecked) {
+                        parentCheckbox.indeterminate = true;
+                        parentCheckbox.checked = false;
+                    } else {
+                        parentCheckbox.indeterminate = false;
+                        parentCheckbox.checked = false;
+                    }
+                });
+            });
+
+            // Contact reason dropdown
+            const contactReasonSelect = document.getElementById('contact-reason-select');
+            const serviceSelectionContainer = document.getElementById('service-selection-container');
+            
+            // Show service selection for relevant contact reasons
+            contactReasonSelect.addEventListener('change', function() {
+                const selectedValue = this.value;
+                
+                // Show service selection for preventivo and informazioni
+                if (selectedValue === 'preventivo' || selectedValue === 'informazioni' || selectedValue === 'assistenza') {
+                    serviceSelectionContainer.style.display = 'block';
+                    serviceSelectionContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        serviceSelectionContainer.style.opacity = '1';
+                    }, 10);
+                } else {
+                    serviceSelectionContainer.style.opacity = '0';
+                    setTimeout(() => {
+                        serviceSelectionContainer.style.display = 'none';
+                    }, 300);
+                }
+            });
+
+            // Initialize service selection visibility based on initial dropdown value
+            if (contactReasonSelect.value === 'preventivo' || contactReasonSelect.value === 'informazioni' || contactReasonSelect.value === 'assistenza') {
+                serviceSelectionContainer.style.display = 'block';
+            } else {
+                serviceSelectionContainer.style.display = 'none';
+            }
+
+            // Form submission and confirmation modal
+            const contactForm = document.getElementById('contact-form');
+            const confirmationModal = document.getElementById('confirmation-modal');
+            const modalClose = document.querySelector('.modal-close');
+            const modalButton = document.querySelector('.modal-container .btn');
+            
+            // Form submit handler
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault(); // Prevent actual form submission for demo
+                
+                // Show confirmation modal
+                confirmationModal.classList.add('active');
+                document.body.style.overflow = 'hidden'; // Prevent scrolling when modal is open
+            });
+            
+            // Close modal when clicking the close button
+            modalClose.addEventListener('click', function() {
+                confirmationModal.classList.remove('active');
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+            });
+            
+            // Close modal when clicking the button
+            modalButton.addEventListener('click', function() {
+                confirmationModal.classList.remove('active');
+                document.body.style.overflow = 'auto'; // Re-enable scrolling
+                contactForm.reset(); // Optional: Reset the form after successful submission
+            });
+            
+            // Close modal when clicking outside of it
+            confirmationModal.addEventListener('click', function(e) {
+                if (e.target === confirmationModal) {
+                    confirmationModal.classList.remove('active');
+                    document.body.style.overflow = 'auto'; // Re-enable scrolling
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,1945 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>I.Barbon - Chartering</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+    /* Reset e stili generali */
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Poppins', sans-serif;
+    }
+
+    :root {
+        --primary: #309ce4;
+        --primary-dark: #164464;
+        --secondary: #283c54;
+        --text-light: #85949e;
+        --white: #ffffff;
+        --light-bg: #f9f9f9;
+        --transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    html {
+        scroll-behavior: smooth;
+        font-size: 18px;
+    }
+
+    body {
+        overflow-x: hidden;
+        font-size: 1rem;
+        line-height: 1.6;
+        color: var(--secondary);
+        background-color: var(--white);
+    }
+
+    a {
+        text-decoration: none;
+        color: inherit;
+    }
+
+    /* Utility Classes */
+    .container {
+        width: 100%;
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 0 30px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background-color: var(--primary);
+        color: var(--white);
+        padding: 18px 36px;
+        border-radius: 50px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 1.1rem;
+        letter-spacing: 1px;
+        position: relative;
+        overflow: hidden;
+        transition: var(--transition);
+        border: none;
+        cursor: pointer;
+        box-shadow: 0 10px 20px rgba(48, 156, 228, 0.2);
+        z-index: 1;
+    }
+
+    .btn:before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(120deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+        transform: translateX(-100%);
+        transition: var(--transition);
+        z-index: -1;
+    }
+
+    .btn:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 15px 30px rgba(48, 156, 228, 0.3);
+    }
+
+    .btn:hover:before {
+        transform: translateX(100%);
+    }
+
+    .section {
+        padding: 120px 0;
+        position: relative;
+    }
+
+    .section-title {
+        color: var(--primary-dark);
+        font-size: 3.2rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        position: relative;
+        display: inline-block;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: var(--transition);
+    }
+
+    .section-title.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .section-title:after {
+        content: '';
+        position: absolute;
+        width: 60px;
+        height: 4px;
+        background: var(--primary);
+        bottom: -10px;
+        left: 0;
+        border-radius: 2px;
+        transition: var(--transition);
+    }
+
+    .section-title.centered {
+        text-align: center;
+        display: block;
+    }
+
+    .section-title.centered:after {
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    .section-subtitle {
+        color: var(--text-light);
+        font-size: 1.26rem;
+        max-width: 800px;
+        margin: 0 auto 60px;
+        line-height: 1.8;
+        opacity: 0;
+        transform: translateY(30px);
+        transition: var(--transition);
+        transition-delay: 0.2s;
+    }
+
+    .section-subtitle.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .text-center {
+        text-align: center;
+    }
+
+    /* Header */
+    header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        padding: 25px 0;
+        z-index: 1000;
+        transition: var(--transition);
+    }
+
+    header.scrolled {
+        background-color: rgba(40, 60, 84, 0.95);
+        padding: 15px 0;
+        backdrop-filter: blur(10px);
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        width: 123px;
+        height: auto;
+        position: relative;
+        z-index: 1001;
+        transition: var(--transition);
+    }
+
+    .logo img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+        filter: drop-shadow(0 5px 10px rgba(0, 0, 0, 0.1));
+    }
+
+    .nav-container {
+        display: flex;
+        align-items: center;
+    }
+
+    .nav-links {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: nowrap;
+        transition: var(--transition);
+    }
+
+    .nav-links a {
+        color: var(--white);
+        margin: 0 12px;
+        font-size: 0.95rem;
+        font-weight: 500;
+        position: relative;
+        transition: var(--transition);
+        padding: 8px 0;
+        white-space: nowrap;
+    }
+
+    /* Dropdown styling */
+    .dropdown {
+        position: relative;
+        display: inline-block;
+    }
+
+    .dropdown > a:after {
+        content: '\f107';
+        font-family: 'Font Awesome 6 Free';
+        font-weight: 900;
+        margin-left: 4px;
+        transition: var(--transition);
+        color: var(--primary);
+        display: inline-block;
+        vertical-align: middle;
+    }
+
+    .dropdown:hover > a:after {
+        transform: rotate(180deg);
+    }
+
+    .dropdown-content {
+        position: absolute;
+        top: 100%;
+        left: 50%;
+        transform: translateX(-50%) translateY(20px);
+        background-color: var(--secondary);
+        min-width: 187px;
+        border-radius: 10px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        padding: 10px 0;
+        z-index: 100;
+        overflow: hidden;
+    }
+
+    .dropdown-content:before {
+        content: '';
+        position: absolute;
+        top: -5px;
+        left: 50%;
+        transform: translateX(-50%) rotate(45deg);
+        width: 10px;
+        height: 10px;
+        background-color: var(--secondary);
+    }
+
+    .dropdown-content a {
+        color: var(--white);
+        padding: 12px 15px;
+        display: block;
+        margin: 0;
+        font-size: 0.9rem;
+        transition: var(--transition);
+        line-height: 1.4;
+        word-wrap: break-word;
+        white-space: normal;
+    }
+
+    .dropdown-content a:hover {
+        background-color: var(--primary-dark);
+        transform: translateX(5px);
+    }
+
+    .dropdown-content a:before {
+        display: none;
+    }
+
+    .dropdown:hover .dropdown-content {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(-50%) translateY(10px);
+    }
+
+    .language-selector {
+        display: flex;
+        align-items: center;
+        margin-left: 15px;
+        position: relative;
+        white-space: nowrap;
+    }
+
+    .language-selector img {
+        width: 20px;
+        height: auto;
+        margin-right: 8px;
+        border-radius: 3px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    .hamburger {
+        display: none;
+        cursor: pointer;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background-color: var(--primary);
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        z-index: 1001;
+        box-shadow: 0 5px 15px rgba(48, 156, 228, 0.3);
+        transition: var(--transition);
+        margin-left: 15px;
+    }
+
+    .hamburger span {
+        width: 24px;
+        height: 2px;
+        background-color: var(--white);
+        margin: 2px 0;
+        transition: var(--transition);
+        border-radius: 2px;
+    }
+
+    .hamburger.active span:nth-child(1) {
+        transform: translateY(6px) rotate(45deg);
+    }
+
+    .hamburger.active span:nth-child(2) {
+        opacity: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+        transform: translateY(-6px) rotate(-45deg);
+    }
+
+    /* Hero Section */
+    .hero {
+        position: relative;
+        height: 70vh;
+        width: 100%;
+        overflow: hidden;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .hero-image {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -2;
+    }
+
+    .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(22, 68, 100, 0.8) 0%, rgba(40, 60, 84, 0.7) 100%);
+        z-index: -1;
+    }
+
+    .hero-content {
+        text-align: center;
+        color: var(--white);
+        max-width: 900px;
+        padding: 0 20px;
+        z-index: 1;
+        margin-top: 150px;
+    }
+
+    .hero-title {
+        font-size: 3.1rem;
+        font-weight: 700;
+        margin-bottom: 40px;
+        line-height: 1.4;
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 1s forwards 0.5s;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        max-width: 900px;
+    }
+
+    .hero-cta {
+        opacity: 0;
+        transform: translateY(30px);
+        animation: fadeInUp 1s forwards 1s;
+    }
+
+    /* About Section */
+    .about {
+        padding: 120px 0;
+        background-color: var(--light-bg);
+    }
+
+    .about-title {
+        color: var(--primary-dark);
+        font-size: 3.2rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+    }
+
+    .about-subtitle {
+        color: var(--text-light);
+        font-size: 1.26rem;
+        max-width: 800px;
+        margin: 0 auto 60px;
+        line-height: 1.8;
+    }
+
+    .about-content {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 30px;
+        margin-top: 60px;
+    }
+
+    .about-card {
+        background-color: var(--white);
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.05);
+        transition: var(--transition);
+        position: relative;
+        z-index: 1;
+        opacity: 0;
+        transform: translateY(30px);
+    }
+
+    .about-card.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .about-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1);
+    }
+
+    .about-content-text {
+        padding: 30px;
+        text-align: center;
+    }
+
+    .about-icon {
+        width: 90px;
+        height: 90px;
+        background-color: var(--primary);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 20px;
+        color: var(--white);
+        font-size: 2.8rem;
+        box-shadow: 0 10px 20px rgba(48, 156, 228, 0.3);
+        transition: var(--transition);
+    }
+
+    .about-card:hover .about-icon {
+        transform: translateY(-5px) scale(1.05);
+        box-shadow: 0 15px 30px rgba(48, 156, 228, 0.4);
+    }
+
+    .about-title-text {
+        color: var(--primary-dark);
+        font-size: 1.53rem;
+        font-weight: 600;
+        margin-bottom: 15px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .about-title-text:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 40px;
+        height: 3px;
+        background-color: var(--primary);
+        border-radius: 2px;
+        transition: var(--transition);
+    }
+
+    .about-card:hover .about-title-text:after {
+        width: 60px;
+    }
+
+    .about-description {
+        color: var(--text-light);
+        font-size: 1.035rem;
+        line-height: 1.7;
+    }
+
+    /* Partner BIMCO Section */
+    .partner-bimco {
+        padding: 80px 0;
+        background-color: var(--white);
+        text-align: center;
+    }
+
+    .partner-bimco-title {
+        color: var(--primary-dark);
+        font-size: 2.5rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+    }
+
+    .partner-bimco-description {
+        color: var(--text-light);
+        font-size: 1.2rem;
+        max-width: 800px;
+        margin: 0 auto 30px;
+        line-height: 1.7;
+    }
+
+    .partner-bimco-logo {
+        max-width: 200px;
+        margin: 0 auto 20px;
+    }
+
+    .partner-bimco-member {
+        color: var(--secondary);
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+
+    /* Feature Section */
+    .feature-section {
+        position: relative;
+        padding: 120px 0;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        color: var(--white);
+        text-align: center;
+    }
+
+    .feature-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(135deg, rgba(22, 68, 100, 0.9) 0%, rgba(40, 60, 84, 0.8) 100%);
+        z-index: 0;
+    }
+
+    .feature-content {
+        position: relative;
+        z-index: 1;
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
+
+    .feature-title {
+        font-size: 3rem;
+        font-weight: 700;
+        margin-bottom: 30px;
+        text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-description {
+        font-size: 1.2rem;
+        line-height: 1.8;
+        margin-bottom: 40px;
+        text-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* White margin between feature sections */
+    .white-margin {
+        height: 60px;
+        background-color: var(--white);
+    }
+
+    /* Carousel Section */
+    .carousel-container {
+        position: relative;
+        max-width: 1000px;
+        margin: 60px auto 0;
+        overflow: hidden;
+        border-radius: 15px;
+        box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+    }
+
+    .carousel {
+        position: relative;
+        height: 600px;
+    }
+
+    .carousel-item {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        opacity: 0;
+        transition: opacity 0.5s ease;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .carousel-item.active {
+        opacity: 1;
+        z-index: 1;
+    }
+
+    .carousel-image-container {
+        position: relative;
+        width: 100%;
+        height: 500px;
+        overflow: hidden;
+    }
+
+    .carousel-image-wrapper {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        display: flex;
+        transition: transform 0.5s ease;
+    }
+
+    .carousel-image {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        flex-shrink: 0;
+    }
+
+    .carousel-info {
+        background-color: var(--secondary);
+        color: var(--white);
+        padding: 20px;
+        text-align: center;
+        height: 100px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+    .carousel-info h3 {
+        font-size: 1.2rem;
+        font-weight: 500;
+        margin: 0;
+    }
+
+    .carousel-nav {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        padding: 0 20px;
+        z-index: 2;
+    }
+
+    .carousel-nav button {
+        background-color: rgba(40, 60, 84, 0.7);
+        color: var(--white);
+        border: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        transition: var(--transition);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    .carousel-nav button:hover {
+        background-color: var(--primary);
+        transform: scale(1.1);
+    }
+
+    .carousel-indicators {
+        position: absolute;
+        bottom: 120px;
+        left: 0;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        z-index: 2;
+    }
+
+    .carousel-indicator {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.5);
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .carousel-indicator.active {
+        background-color: var(--white);
+        transform: scale(1.2);
+    }
+
+    .carousel-pagination {
+        position: absolute;
+        bottom: 120px;
+        right: 20px;
+        background-color: rgba(40, 60, 84, 0.7);
+        color: var(--white);
+        padding: 5px 10px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        z-index: 2;
+    }
+
+    .image-nav {
+        position: absolute;
+        bottom: 120px;
+        left: 20px;
+        display: flex;
+        gap: 10px;
+        z-index: 2;
+    }
+
+    .image-nav button {
+        background-color: rgba(40, 60, 84, 0.7);
+        color: var(--white);
+        border: none;
+        width: 30px;
+        height: 30px;
+        border-radius: 50%;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+        transition: var(--transition);
+    }
+
+    .image-nav button:hover {
+        background-color: var(--primary);
+    }
+
+    /* Footer */
+    footer {
+        background-color: var(--secondary);
+        color: var(--white);
+        position: relative;
+        overflow: hidden;
+    }
+
+    .footer-top {
+        padding: 80px 0 40px;
+        position: relative;
+        z-index: 1;
+    }
+
+    .footer-wave {
+        position: absolute;
+        top: -100px;
+        left: 0;
+        width: 100%;
+        height: 100px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M321.39,56.44c58-10.79,114.16-30.13,172-41.86,82.39-16.72,168.19-17.73,250.45-.39C823.78,31,906.67,72,985.66,92.83c70.05,18.48,146.53,26.09,214.34,3V0H0V27.35A600.21,600.21,0,0,0,321.39,56.44Z' fill='%23ffffff'/%3E%3C/svg%3E");
+        background-size: cover;
+        background-position: center;
+        z-index: 0;
+    }
+
+    .footer-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+    }
+
+    .footer-column h3 {
+        font-size: 1.6rem;
+        font-weight: 600;
+        margin-bottom: 25px;
+        position: relative;
+        padding-bottom: 15px;
+    }
+
+    .footer-column h3:after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 40px;
+        height: 3px;
+        background-color: var(--primary);
+        border-radius: 2px;
+    }
+
+    .footer-links {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .footer-links a {
+        margin-bottom: 12px;
+        transition: var(--transition);
+        display: inline-block;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+    }
+
+    .footer-links a:hover {
+        color: var(--primary);
+        transform: translateX(5px);
+    }
+
+    .contact-info {
+        margin-bottom: 15px;
+        display: flex;
+        align-items: flex-start;
+    }
+
+    .contact-info i {
+        margin-right: 15px;
+        color: var(--primary);
+        font-size: 1.3rem;
+        margin-top: 5px;
+    }
+
+    .contact-info p {
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 1.1rem;
+    }
+
+    .social-icons {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .social-icons a {
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        background-color: rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: var(--white);
+        font-size: 1.3rem;
+        transition: var(--transition);
+    }
+
+    .social-icons a:hover {
+        background-color: var(--primary);
+        transform: translateY(-5px);
+    }
+
+    .footer-bottom {
+        text-align: center;
+        padding: 25px 0;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 1rem;
+    }
+
+    /* Animations */
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    @keyframes fadeInUp {
+        from { 
+            opacity: 0;
+            transform: translateY(30px);
+        }
+        to { 
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes float {
+        0% { transform: translateY(0px); }
+        50% { transform: translateY(-10px); }
+        100% { transform: translateY(0px); }
+    }
+
+    .animate-float {
+        animation: float 4s ease-in-out infinite;
+    }
+
+    /* Scroll Reveal Animation */
+    .reveal {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: var(--transition);
+    }
+
+    .reveal.active {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    /* Preloader */
+    .preloader {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: var(--secondary);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+        transition: opacity 0.5s ease, visibility 0.5s ease;
+    }
+
+    .preloader.fade-out {
+        opacity: 0;
+        visibility: hidden;
+    }
+
+    .loader {
+        width: 80px;
+        height: 80px;
+        border: 5px solid rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        border-top-color: var(--primary);
+        animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Cursor */
+    .cursor {
+        position: fixed;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        background-color: rgba(48, 156, 228, 0.5);
+        pointer-events: none;
+        mix-blend-mode: difference;
+        z-index: 9999;
+        transform: translate(-50%, -50%);
+        transition: transform 0.1s ease, width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+        display: none;
+    }
+
+    .cursor.active {
+        width: 50px;
+        height: 50px;
+        background-color: rgba(48, 156, 228, 0.2);
+    }
+
+    @media (min-width: 1025px) {
+        .cursor {
+            display: block;
+        }
+    }
+
+    /* Scroll Progress */
+    .scroll-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background-color: var(--primary);
+        width: 0%;
+        z-index: 1002;
+        transition: width 0.1s ease;
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 50px;
+        height: 50px;
+        background-color: var(--primary);
+        color: var(--white);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: var(--transition);
+        box-shadow: 0 5px 15px rgba(48, 156, 228, 0.3);
+        z-index: 999;
+    }
+
+    .back-to-top.active {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .back-to-top:hover {
+        background-color: var(--primary-dark);
+        transform: translateY(-5px);
+    }
+
+    /* Media Queries */
+    @media screen and (max-width: 1200px) {
+        .hamburger {
+            display: flex;
+        }
+        
+        .nav-links {
+            position: fixed;
+            top: 0;
+            right: -100%;
+            width: 300px;
+            height: 100vh;
+            background-color: var(--secondary);
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 100px 40px 40px;
+            transition: var(--transition);
+            box-shadow: -10px 0 30px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+            z-index: 1000;
+        }
+        
+        .nav-links.active {
+            right: 0;
+        }
+        
+        header .header-container {
+            position: relative;
+            z-index: 1002;
+        }
+        
+        .hamburger {
+            position: relative;
+            z-index: 1002;
+        }
+        
+        .nav-links a {
+            margin: 15px 0;
+            font-size: 1.2rem;
+            width: 100%;
+        }
+        
+        .dropdown {
+            width: 100%;
+        }
+        
+        .dropdown-content {
+            position: static;
+            background-color: rgba(0, 0, 0, 0.1);
+            box-shadow: none;
+            opacity: 1;
+            visibility: visible;
+            transform: none;
+            display: none;
+            padding: 0;
+            width: 100%;
+            margin-top: 10px;
+            border-radius: 5px;
+            min-width: auto;
+        }
+        
+        .dropdown-content a {
+            padding: 12px 15px;
+            font-size: 0.95rem;
+            line-height: 1.4;
+        }
+        
+        .dropdown-content:before {
+            display: none;
+        }
+        
+        .dropdown.active .dropdown-content {
+            display: block;
+        }
+        
+        .dropdown > a:after {
+            content: '\f107';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            margin-left: 10px;
+            transition: var(--transition);
+        }
+        
+        .dropdown.active > a:after {
+            transform: rotate(180deg);
+        }
+        
+        .language-selector {
+            margin-left: 0;
+            margin-top: 20px;
+        }
+        
+        .hero-title {
+            font-size: 2.8rem;
+        }
+
+        .carousel {
+            height: 500px;
+        }
+
+        .carousel-image-container {
+            height: 400px;
+        }
+
+        .carousel-indicators {
+            bottom: 100px;
+        }
+
+        .carousel-pagination {
+            bottom: 100px;
+        }
+
+        .image-nav {
+            bottom: 100px;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            font-size: 2.5rem;
+        }
+        
+        .section-subtitle {
+            font-size: 1.2rem;
+        }
+        
+        .hero-title {
+            font-size: 2.4rem;
+        }
+        
+        .about-content {
+            grid-template-columns: 1fr;
+            max-width: 450px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .carousel {
+            height: 450px;
+        }
+
+        .carousel-image-container {
+            height: 350px;
+        }
+
+        .carousel-indicators {
+            bottom: 100px;
+        }
+
+        .carousel-pagination {
+            bottom: 100px;
+        }
+
+        .image-nav {
+            bottom: 100px;
+        }
+    }
+
+    @media screen and (max-width: 480px) {
+        .container {
+            padding: 0 20px;
+        }
+        
+        .logo {
+            width: 101px;
+        
+        }
+        
+        .hero-title {
+            font-size: 2rem;
+        }
+        
+        .btn {
+            padding: 16px 30px;
+            font-size: 1rem;
+        }
+        
+        .section-title {
+            font-size: 2.2rem;
+        }
+        
+        .dropdown-content a {
+            font-size: 0.9rem;
+            padding: 10px 12px;
+        }
+
+        .carousel {
+            height: 400px;
+        }
+
+        .carousel-image-container {
+            height: 300px;
+        }
+
+        .carousel-info h3 {
+            font-size: 1rem;
+        }
+
+        .carousel-nav button {
+            width: 40px;
+            height: 40px;
+            font-size: 1.2rem;
+        }
+
+        .carousel-indicators {
+            bottom: 100px;
+        }
+
+        .carousel-pagination {
+            bottom: 100px;
+            font-size: 0.8rem;
+        }
+
+        .image-nav {
+            bottom: 100px;
+        }
+
+        .image-nav button {
+            width: 25px;
+            height: 25px;
+            font-size: 0.8rem;
+        }
+    }
+</style>
+</head>
+<body>
+<!-- Preloader -->
+<div class="preloader">
+    <div class="loader"></div>
+</div>
+
+<!-- Custom Cursor -->
+<div class="cursor"></div>
+
+<!-- Scroll Progress Bar -->
+<div class="scroll-progress"></div>
+
+<!-- Back to Top Button -->
+<div class="back-to-top">
+    <i class="fas fa-arrow-up"></i>
+</div>
+
+<!-- Header -->
+<header>
+    <div class="container header-container">
+        <div class="logo">
+            <a href="index.html"><img src="static/logo-i-barbon.png" alt="I.Barbon Logo"></a>
+        </div>
+        <div class="nav-container">
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="chi-siamo.html" class="nav-link">Chi siamo</a>
+                <a href="chartering.html" class="nav-link">Chartering</a>
+                <a href="flotta.html" class="nav-link">Flotta</a>
+                <div class="dropdown">
+                    <a href="trasporti-internazionali.html">Trasporti internazionali</a>
+                    <div class="dropdown-content">
+                        <a href="trasporti-internazionali.html">Marittimo</a>
+                        <a href="trasporti-internazionali.html">Aereo</a>
+                        <a href="trasporti-internazionali.html">Terrestre</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="servizi.html">Servizi</a>
+                    <div class="dropdown-content">
+                        <a href="servizi.html">Logistica</a>
+                        <a href="servizi.html">Consulenza</a>
+                        <a href="servizi.html">Assicurazioni</a>
+                    </div>
+                </div>
+                <div class="dropdown">
+                    <a href="informazioni.html">Informazioni</a>
+                    <div class="dropdown-content">
+                        <a href="informazioni.html">FAQ</a>
+                        <a href="informazioni.html">Documenti</a>
+                        <a href="informazioni.html">Normative</a>
+                    </div>
+                </div>
+                <a href="blog.html" class="nav-link">Blog</a>
+                <a href="form.html" class="nav-link">Contatti</a>
+                <div class="dropdown language-selector">
+                    <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/0/03/Flag_of_Italy.svg" alt="Italiano"> IT</a>
+                    <div class="dropdown-content">
+                        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/a/ae/Flag_of_the_United_Kingdom.svg" alt="English"> EN</a>
+                        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/en/c/c3/Flag_of_France.svg" alt="Français"> FR</a>
+                        <a href="#"><img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Flag_of_Germany.svg" alt="Deutsch"> DE</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Hero Section -->
+<section class="hero">
+    <img src="static/top-i-barbon-trasporto-merci-project-cargo.jpg" alt="Hero Image" class="hero-image">
+    <div class="hero-overlay"></div>
+    <div class="hero-content">
+        <h1 class="hero-title">Chartering</h1>
+        <div class="hero-cta">
+            <a href="#about" class="btn">Scopri di più</a>
+        </div>
+    </div>
+</section>
+
+<!-- About Section -->
+<section class="about" id="about">
+    <div class="container">
+        <h2 class="about-title text-center">Il nostro servizio di chartering</h2>
+        <p class="about-subtitle text-center">Offriamo soluzioni personalizzate per il noleggio di navi e il trasporto di merci in tutto il mondo.</p>
+        
+        <div class="about-content">
+            <div class="about-card reveal">
+                <a href="chartering.html" style="text-decoration: none; color: inherit;">
+                    <div class="about-content-text">
+                        <div class="about-icon animate-float">
+                            <i class="fas fa-ship"></i>
+                        </div>
+                        <h3 class="about-title-text">Chartering</h3>
+                        <p class="about-description">Offriamo servizi di noleggio navi completi o parziali per trasporti marittimi internazionali, con soluzioni personalizzate per ogni esigenza.</p>
+                    </div>
+                </a>
+            </div>
+            
+            <div class="about-card reveal" style="transition-delay: 0.2s;">
+                <a href="trasporti-internazionali.html" style="text-decoration: none; color: inherit;">
+                    <div class="about-content-text">
+                        <div class="about-icon animate-float">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3 class="about-title-text">Copertura globale</h3>
+                        <p class="about-description">Grazie alla nostra rete di partner internazionali, possiamo offrire servizi di chartering in tutti i principali porti del mondo.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Partner BIMCO Section -->
+<section class="partner-bimco">
+    <div class="container">
+        <h2 class="partner-bimco-title">Partner BIMCO</h2>
+        <p class="partner-bimco-description">Siamo membri di BIMCO, la più grande associazione internazionale di shipping, garantendo i più alti standard di qualità e professionalità.</p>
+        <img src="static/logo-bimco.png" alt="BIMCO Logo" class="partner-bimco-logo">
+        <p class="partner-bimco-member">Registered member no. 169321</p>
+    </div>
+</section>
+
+<!-- Feature Section - Noleggio navi -->
+<section class="feature-section" style="background-image: url('static/noleggio-navi-project-cargo-i-barbon.jpg'); background-attachment: fixed;">
+    <div class="feature-overlay"></div>
+    <div class="feature-content">
+        <h2 class="feature-title">Noleggio navi general cargo parziali e complete</h2>
+        <p class="feature-description">I.Barbon offre un servizio di chartering per il noleggio di navi general cargo completo o parziale ovunque nel mondo e per qualsiasi tipologia di merce grazie a consolidate partnership con i più importanti carrier marittimi. Il nostro team di esperti è in grado di trovare la soluzione più adatta alle vostre esigenze, garantendo efficienza, affidabilità e competitività.</p>
+        <a href="form.html" class="btn">Richiedi un preventivo</a>
+    </div>
+</section>
+
+<!-- White margin between sections -->
+<div class="white-margin"></div>
+
+<!-- Feature Section - Merci trasportate -->
+<section class="feature-section" style="background-image: url('static/operatore-marittimo-i-barbon.jpg'); background-attachment: fixed;">
+    <div class="feature-overlay"></div>
+    <div class="feature-content">
+        <h2 class="feature-title">Merci trasportate</h2>
+        <p class="feature-description">Grazie alla nostra esperienza pluridecennale nel settore, siamo in grado di gestire il trasporto di qualsiasi tipologia di merce: dai carichi convenzionali ai project cargo, dai prodotti siderurgici ai materiali da costruzione, dai prodotti forestali ai carichi eccezionali. Il nostro team di esperti è a vostra disposizione per trovare la soluzione più adatta alle vostre esigenze di trasporto.</p>
+        <a href="servizi.html" class="btn">Scopri i nostri servizi</a>
+    </div>
+</section>
+
+<!-- Gallery Section -->
+<section class="section" id="gallery">
+    <div class="container">
+        <h2 class="section-title centered reveal">Le nostre spedizioni</h2>
+        <p class="section-subtitle text-center reveal">Guarda alcune delle nostre spedizioni più recenti.</p>
+        
+        <div class="carousel-container reveal">
+            <div class="carousel">
+                <!-- Project 1 -->
+                <div class="carousel-item active">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/trasporto-materiale-ferroso.jpg" alt="Lady Augusta - Wire Rods" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Lady Augusta - Wire Rods - Monfalcone 08.2019</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/imbarco-lady-speranza-farina-onu-.jpg" alt="Lady Speranza - Flour in Big Bags" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Lady Speranza - Flour in Big Bags - Ambarli 12.2020</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 3 - Multiple images -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 200%">
+                            <img src="static/Chartering/merci-trasportate-i-barbon-trasporti-internazionali.jpg" alt="Lady Speranza - Barley - Khoms" class="carousel-image">
+                            <img src="static/Chartering/trasporto-granaglie.jpg" alt="Lady Speranza - Barley - Khoms" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Lady Speranza - Barley - Khoms 09.2020</h3>
+                    </div>
+                    <div class="image-nav">
+                        <button class="image-prev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="image-next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="carousel-pagination">1/2</div>
+                </div>
+                
+                <!-- Project 4 - Multiple images -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 200%">
+                            <img src="static/Chartering/merci-trasporta-i-barbon.jpg" alt="Project Cargo - Aliaga" class="carousel-image">
+                            <img src="static/Chartering/merci-trasportate-i-barbon-4i.jpg" alt="Project Cargo - Aliaga" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Project Cargo - Aliaga 01.2019</h3>
+                    </div>
+                    <div class="image-nav">
+                        <button class="image-prev"><i class="fas fa-chevron-left"></i></button>
+                        <button class="image-next"><i class="fas fa-chevron-right"></i></button>
+                    </div>
+                    <div class="carousel-pagination">1/2</div>
+                </div>
+                
+                <!-- Project 5 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/merci-trasporta-i-barbon-5.jpg" alt="Lady Augusta - Steel Billets" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Lady Augusta - Steel Billets - Monfalcone 09.2019</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 6 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/trasporto-project-cargo-i-barbon.jpg" alt="Operatore marittimo I.Barbon" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Operatore marittimo I.Barbon</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 7 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/Garip-Baba-Project-Cargo-06.21-Anversa.jpg" alt="Garip Baba - Project Cargo" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Garip Baba - Project Cargo - Anversa 06.21</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 8 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/Costance-Project-Cargo-04.21-Icdas.jpg" alt="Costance - Project Cargo" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Costance - Project Cargo - Icdas 04.21</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 9 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/754b8589-641f-4fd1-8556-42c8241273e5.jpg" alt="Lady Laguna - HRC" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Lady Laguna - HRC - Mariupol 09.21</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 10 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/Cpt-Ahmad-II-Soft-Wood-Koper-10.21.jpg" alt="Cpt Ahmad II - Soft Wood" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Cpt Ahmad II - Soft Wood - Koper 10.21</h3>
+                    </div>
+                </div>
+                
+                <!-- Project 11 -->
+                <div class="carousel-item">
+                    <div class="carousel-image-container">
+                        <div class="carousel-image-wrapper" style="width: 100%">
+                            <img src="static/Chartering/ibarbon-projcet-cargo-4.jpg" alt="Cpt Ahmad II - Project Cargo" class="carousel-image">
+                        </div>
+                    </div>
+                    <div class="carousel-info">
+                        <h3>Cpt Ahmad II - Project Cargo - Chioggia 10.2020</h3>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="carousel-nav">
+                <button class="carousel-prev"><i class="fas fa-chevron-left"></i></button>
+                <button class="carousel-next"><i class="fas fa-chevron-right"></i></button>
+            </div>
+            
+            <div class="carousel-indicators">
+                <span class="carousel-indicator active" data-index="0"></span>
+                <span class="carousel-indicator" data-index="1"></span>
+                <span class="carousel-indicator" data-index="2"></span>
+                <span class="carousel-indicator" data-index="3"></span>
+                <span class="carousel-indicator" data-index="4"></span>
+                <span class="carousel-indicator" data-index="5"></span>
+                <span class="carousel-indicator" data-index="6"></span>
+                <span class="carousel-indicator" data-index="7"></span>
+                <span class="carousel-indicator" data-index="8"></span>
+                <span class="carousel-indicator" data-index="9"></span>
+                <span class="carousel-indicator" data-index="10"></span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Footer -->
+<footer>
+    <div class="footer-wave"></div>
+    <div class="footer-top">
+        <div class="container">
+            <div class="footer-grid">
+                <div class="footer-column">
+                    <h3>Dati aziendali</h3>
+                    <div class="contact-info">
+                        <i class="fas fa-building"></i>
+                        <p>I.Barbon S.r.l.</p>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p><a href="https://maps.google.com/?q=Viale+Ancona,+26,+Venezia+Mestre" target="_blank">Viale Ancona, 26, Venezia Mestre</a></p>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-phone"></i>
+                        <p><a href="tel:+390415314444">+39.041.5314444</a></p>
+                    </div>
+                    <div class="contact-info">
+                        <i class="fas fa-envelope"></i>
+                        <p><a href="mailto:info@ibarbon.com">info@ibarbon.com</a></p>
+                    </div>
+                    <div class="social-icons">
+                        <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                        <a href="#" target="_blank"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Chartering</h3>
+                    <div class="footer-links">
+                        <a href="flotta.html">Flotta</a>
+                        <a href="chartering.html">Servizi di noleggio</a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Trasporti internazionali</h3>
+                    <div class="footer-links">
+                        <a href="trasporti-internazionali.html">Trasporto marittimo</a>
+                        <a href="trasporti-internazionali.html">Trasporto aereo</a>
+                        <a href="trasporti-internazionali.html">Trasporto su gomma</a>
+                        <a href="trasporti-internazionali.html">Trasporto container completo e groupage</a>
+                        <a href="trasporti-internazionali.html">Trasporto project cargo</a>
+                        <a href="trasporti-internazionali.html">Trasporto Ro-Ro</a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Servizi e logistica</h3>
+                    <div class="footer-links">
+                        <a href="servizi.html">Door to door</a>
+                        <a href="servizi.html">Trasporto intermodale</a>
+                        <a href="servizi.html">Consulenza doganale, assicurativa e documentale</a>
+                        <a href="servizi.html">Assistenza imbarco / sbarco</a>
+                        <a href="servizi.html">Magazzinaggio</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="footer-bottom">
+        <div class="container">
+            <p>Copyright 2021 I.Barbon Srl | P.IVA02369570276 | <a href="privacy.html">privacy</a> | <a href="cookies.html">cookies</a></p>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Preloader
+    window.addEventListener('load', function() {
+        const preloader = document.querySelector('.preloader');
+        preloader.classList.add('fade-out');
+        setTimeout(() => {
+            preloader.style.display = 'none';
+        }, 500);
+    });
+
+    // Custom cursor
+    const cursor = document.querySelector('.cursor');
+    
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+    });
+    
+    document.addEventListener('mousedown', () => {
+        cursor.classList.add('active');
+    });
+    
+    document.addEventListener('mouseup', () => {
+        cursor.classList.remove('active');
+    });
+
+    // Scroll progress
+    window.addEventListener('scroll', () => {
+        const scrollProgress = document.querySelector('.scroll-progress');
+        const totalHeight = document.body.scrollHeight - window.innerHeight;
+        const progress = (window.pageYOffset / totalHeight) * 100;
+        scrollProgress.style.width = progress + '%';
+    });
+
+    // Back to top button
+    const backToTopBtn = document.querySelector('.back-to-top');
+    
+    window.addEventListener('scroll', () => {
+        if (window.pageYOffset > 300) {
+            backToTopBtn.classList.add('active');
+        } else {
+            backToTopBtn.classList.remove('active');
+        }
+    });
+
+    backToTopBtn.addEventListener('click', () => {
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth'
+        });
+    });
+
+    // Mobile menu
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.nav-links');
+    const dropdowns = document.querySelectorAll('.dropdown');
+
+    hamburger.addEventListener('click', () => {
+        hamburger.classList.toggle('active');
+        navLinks.classList.toggle('active');
+        document.body.classList.toggle('no-scroll');
+    });
+
+    // Dropdown handling for mobile
+    dropdowns.forEach(dropdown => {
+        const dropdownLink = dropdown.querySelector('a');
+        
+        dropdownLink.addEventListener('click', (e) => {
+            if (window.innerWidth <= 1200) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            }
+        });
+    });
+
+    // Header scroll effect
+    window.addEventListener('scroll', () => {
+        const header = document.querySelector('header');
+        if (window.scrollY > 50) {
+            header.classList.add('scrolled');
+        } else {
+            header.classList.remove('scrolled');
+        }
+    });
+
+    // Scroll reveal animation
+    function revealOnScroll() {
+        const reveals = document.querySelectorAll('.reveal');
+        
+        reveals.forEach(element => {
+            const windowHeight = window.innerHeight;
+            const elementTop = element.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < windowHeight - elementVisible) {
+                element.classList.add('active');
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
+
+    // Section titles animation
+    function animateTitles() {
+        const titles = document.querySelectorAll('.section-title');
+        const subtitles = document.querySelectorAll('.section-subtitle');
+        
+        titles.forEach(title => {
+            const windowHeight = window.innerHeight;
+            const elementTop = title.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < windowHeight - elementVisible) {
+                title.classList.add('visible');
+            }
+        });
+        
+        subtitles.forEach(subtitle => {
+            const windowHeight = window.innerHeight;
+            const elementTop = subtitle.getBoundingClientRect().top;
+            const elementVisible = 150;
+            
+            if (elementTop < windowHeight - elementVisible) {
+                subtitle.classList.add('visible');
+            }
+        });
+    }
+    
+    window.addEventListener('scroll', animateTitles);
+    window.addEventListener('load', animateTitles);
+
+    // Make titles visible immediately on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const titles = document.querySelectorAll('.section-title');
+        const subtitles = document.querySelectorAll('.section-subtitle');
+        
+        titles.forEach(title => {
+            title.classList.add('visible');
+        });
+        
+        subtitles.forEach(subtitle => {
+            subtitle.classList.add('visible');
+        });
+    });
+
+    // Carousel functionality
+    const carouselItems = document.querySelectorAll('.carousel-item');
+    const carouselPrev = document.querySelector('.carousel-prev');
+    const carouselNext = document.querySelector('.carousel-next');
+    const carouselIndicators = document.querySelectorAll('.carousel-indicator');
+    let currentIndex = 0;
+
+    // Function to show a specific slide
+    function showSlide(index) {
+        // Hide all slides
+        carouselItems.forEach(item => {
+            item.classList.remove('active');
+        });
+        
+        // Deactivate all indicators
+        carouselIndicators.forEach(indicator => {
+            indicator.classList.remove('active');
+        });
+        
+        // Show the current slide and activate its indicator
+        carouselItems[index].classList.add('active');
+        carouselIndicators[index].classList.add('active');
+        
+        // Update current index
+        currentIndex = index;
+        
+        // Reset image position for slides with multiple images
+        const multiImageSlides = document.querySelectorAll('.carousel-item');
+        multiImageSlides.forEach(slide => {
+            const imageWrapper = slide.querySelector('.carousel-image-wrapper');
+            if (imageWrapper && imageWrapper.style.width !== '100%') {
+                imageWrapper.style.transform = 'translateX(0)';
+                if (slide.querySelector('.carousel-pagination')) {
+                    slide.querySelector('.carousel-pagination').textContent = '1/2';
+                }
+            }
+        });
+    }
+
+    // Event listeners for next and previous buttons
+    carouselNext.addEventListener('click', () => {
+        let nextIndex = currentIndex + 1;
+        if (nextIndex >= carouselItems.length) {
+            nextIndex = 0;
+        }
+        showSlide(nextIndex);
+    });
+
+    carouselPrev.addEventListener('click', () => {
+        let prevIndex = currentIndex - 1;
+        if (prevIndex < 0) {
+            prevIndex = carouselItems.length - 1;
+        }
+        showSlide(prevIndex);
+    });
+
+    // Event listeners for indicators
+    carouselIndicators.forEach((indicator, index) => {
+        indicator.addEventListener('click', () => {
+            showSlide(index);
+        });
+    });
+
+    // Handle image navigation for slides with multiple images
+    const imageNextButtons = document.querySelectorAll('.image-next');
+    const imagePrevButtons = document.querySelectorAll('.image-prev');
+
+    imageNextButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const slide = button.closest('.carousel-item');
+            const imageWrapper = slide.querySelector('.carousel-image-wrapper');
+            const paginationEl = slide.querySelector('.carousel-pagination');
+            
+            if (imageWrapper.style.transform === 'translateX(-50%)') {
+                imageWrapper.style.transform = 'translateX(0)';
+                paginationEl.textContent = '1/2';
+            } else {
+                imageWrapper.style.transform = 'translateX(-50%)';
+                paginationEl.textContent = '2/2';
+            }
+        });
+    });
+
+    imagePrevButtons.forEach(button => {
+        button.addEventListener('click', (e) => {
+            e.stopPropagation();
+            const slide = button.closest('.carousel-item');
+            const imageWrapper = slide.querySelector('.carousel-image-wrapper');
+            const paginationEl = slide.querySelector('.carousel-pagination');
+            
+            if (imageWrapper.style.transform === 'translateX(-50%)') {
+                imageWrapper.style.transform = 'translateX(0)';
+                paginationEl.textContent = '1/2';
+            } else {
+                imageWrapper.style.transform = 'translateX(-50%)';
+                paginationEl.textContent = '2/2';
+            }
+        });
+    });
+
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight') {
+            carouselNext.click();
+        } else if (e.key === 'ArrowLeft') {
+            carouselPrev.click();
+        }
+    });
+
+    // Touch swipe functionality
+    const carousel = document.querySelector('.carousel');
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    carousel.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    });
+
+    carousel.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        handleSwipe();
+    });
+
+    function handleSwipe() {
+        if (touchEndX < touchStartX - 50) {
+            // Swipe left, go to next slide
+            carouselNext.click();
+        } else if (touchEndX > touchStartX + 50) {
+            // Swipe right, go to previous slide
+            carouselPrev.click();
+        }
+    }
+
+    // Initialize carousel
+    showSlide(0);
+</script>
+</body>
+</html>
